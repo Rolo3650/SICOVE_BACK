@@ -1,0 +1,139 @@
+{
+    "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+    "overrides": [
+        {
+            "include": ["*logger.middleware.ts"],
+            "linter": {
+                "rules": {
+                    "suspicious": {
+                        "noConsoleLog": "off",
+                        "noConsole": "off"
+                    }
+                }
+            }
+        },
+        {
+            "include": ["*env.schema.ts"],
+            "linter": {
+                "rules": {
+                    "style": {
+                        "useNamingConvention": "off"
+                    }
+                }
+            }
+        },
+        {
+            "formatter": {
+                "enabled": true,
+                "formatWithErrors": false,
+                "attributePosition": "auto",
+                "indentStyle": "space",
+                "indentWidth": 4,
+                "lineWidth": 80,
+                "lineEnding": "crlf"
+            },
+            "javascript": {
+                "formatter": {
+                    "arrowParentheses": "always",
+                    "bracketSameLine": false,
+                    "bracketSpacing": true,
+                    "jsxQuoteStyle": "double",
+                    "quoteProperties": "asNeeded",
+                    "semicolons": "always",
+                    "trailingCommas": "all"
+                }
+            },
+            "json": {
+                "formatter": {
+                    "trailingCommas": "none"
+                }
+            },
+            "organizeImports": {
+                "enabled": true
+            },
+            "include": ["test/*.ts"],
+            "linter": {
+                "rules": {
+                    "all": true,
+                    "correctness": {
+                        "noUndeclaredVariables": "off",
+                        "noUndeclaredDependencies": "off"
+                    },
+                    "nursery": {
+                        "all": true
+                    },
+                    "style": {
+                        "useImportType": "off",
+                        "noNamespaceImport": "off"
+                    },
+                    "suspicious": {
+                        "noExplicitAny": "off"
+                    }
+                }
+            }
+        }
+    ],
+    "vcs": {
+        "enabled": true,
+        "clientKind": "git",
+        "useIgnoreFile": false
+    },
+    "files": {
+        "ignoreUnknown": false,
+        "ignore": [
+            "dist/**",
+            "eslint.config.mjs",
+            "jest.config.ts",
+            "jest-e2e.config.ts",
+            "coverage/**"
+        ]
+    },
+    "formatter": {
+        "enabled": true,
+        "formatWithErrors": false,
+        "ignore": [],
+        "attributePosition": "auto",
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineWidth": 80,
+        "lineEnding": "crlf"
+    },
+    "javascript": {
+        "formatter": {
+            "arrowParentheses": "always",
+            "bracketSameLine": false,
+            "bracketSpacing": true,
+            "jsxQuoteStyle": "double",
+            "quoteProperties": "asNeeded",
+            "semicolons": "always",
+            "trailingCommas": "all"
+        },
+        "parser": {
+            "unsafeParameterDecoratorsEnabled": true
+        }
+    },
+    "json": {
+        "formatter": {
+            "trailingCommas": "none"
+        }
+    },
+    "organizeImports": {
+        "enabled": true
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "all": true,
+            "nursery": {
+                "all": true
+            },
+            "correctness": {
+                "noUndeclaredDependencies": "off",
+                "useHookAtTopLevel": "off"
+            },
+            "style": {
+                "useImportType": "off"
+            }
+        }
+    }
+}

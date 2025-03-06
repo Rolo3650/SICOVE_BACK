@@ -1,15 +1,15 @@
-# echo "🔍 Executing Prisma..."
-# npx prisma generate
-# echo "✅ Execution finished"
+echo "🔍 Executing Prisma..."
+npx prisma generate
+echo "✅ Execution finished"
 
-# echo "🔍 Executing Biome..."
-# npx biome check --write --error-on-warnings
-# echo "✅ Execution finished"
+echo "🔍 Executing Biome..."
+npx biome check --write --error-on-warnings
+echo "✅ Execution finished"
 
-# echo "🔍 Executing TypeScript..."
-# npx tsc
-# echo "✅ Execution finished"
+echo "🔍 Executing TypeScript..."
+npx tsc
+echo "✅ Execution finished"
 
-# echo "🔍 Executing Jest..."
-# npx jest
-# echo "✅ Execution finished"
+echo "🔍 Executing Jest..."
+npx jest
+echo "✅ Execution finished"

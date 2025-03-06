@@ -19,6 +19,25 @@ enum UserStatus {
   pending
 }
 
+enum VehicleType {
+  SUV
+  Sedan
+  PickUp
+}
+
+enum FuelType {
+  Gasoline
+  Diesel
+  Electric
+  Hybrid
+}
+
+enum TransmissionType {
+  Manual
+  Automatic
+  CVT
+}
+
 model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -30,6 +49,73 @@ model User {
   birthday   DateTime
   role       UserRole   @default(student)
   userStatus UserStatus @default(pending)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  staus     Boolean  @default(true)
+}
+
+model Brand {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  brand String
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  staus     Boolean  @default(true)
+
+  Model Model[]
+}
+
+model Model {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  model String
+  description String?
+
+  brandId String @db.ObjectId
+  brand   Brand  @relation(fields: [brandId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  staus     Boolean  @default(true)
+
+  Version Version[]
+}
+
+model Version {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  version     String
+  vehicleType VehicleType
+  fuelType FuelType
+  transmissionType TransmissionType
+  description String?
+
+  modelId String @db.ObjectId
+  model   Model  @relation(fields: [modelId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  staus     Boolean  @default(true)
+
+  Vehicle Vehicle[]
+}
+
+model Vehicle {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  licencePlate String?
+  VIN          String?
+  year         DateTime @default(now())
+  color        String
+  mileage      Int
+  engineNumber String
+  chasisNumber String
+
+  versionId String  @db.ObjectId
+  version   Version @relation(fields: [versionId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()

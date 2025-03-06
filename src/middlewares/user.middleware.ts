@@ -15,9 +15,10 @@ export class UserMiddleware implements NestMiddleware {
     use(req: SafeRequest, _res: Response, next: NextFunction): void {
         const items = req.headers.authorization?.split(" ");
 
-        if (items?.length === 3) {
+        // if (items?.length === 3) { just for today
+        if (items?.length === 2) {
             try {
-                const user: User = this.jwtService.verify(items[2]);
+                const user: User = this.jwtService.verify(items[1]);
 
                 req.user = user;
             } catch (error) {

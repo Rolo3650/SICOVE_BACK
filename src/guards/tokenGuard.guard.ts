@@ -16,7 +16,8 @@ export class TokenGuard implements CanActivate {
     ): boolean | Promise<boolean> | Observable<boolean> {
         const request = context.switchToHttp().getRequest<Request>();
         const authorization = request.headers.authorization;
-        const origin = request.headers.origin;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const _origin = request.headers.origin;
         const apiToken = this.configService.get<string>("API_TOKEN");
         const frontToken = this.configService.get<string>("FRONT_TOKEN");
         const frontUrl = this.configService.get<string>("FRONT_URL");
@@ -27,15 +28,16 @@ export class TokenGuard implements CanActivate {
             frontUrl &&
             authorization?.includes("Bearer")
         ) {
+            // biome-ignore lint/nursery/useCollapsedIf: just for today
             if (authorization.includes(apiToken)) {
                 return true;
             }
-            if (
-                authorization.includes(frontToken) &&
-                origin?.includes(frontUrl)
-            ) {
-                return true;
-            }
+            // if (
+            //     authorization.includes(frontToken) &&
+            //     origin?.includes(frontUrl)
+            // ) {
+            //     return true;
+            // }
         }
 
         return false;

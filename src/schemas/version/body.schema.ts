@@ -6,9 +6,11 @@ import {
 } from "@prisma/client";
 import { getEnumPrismaValues } from "src/utils/enum";
 import { z } from "zod";
-import { zObjectId } from "../general.schema";
+import { NullableToOptional, zObjectId } from "../general.schema";
 
-type SafeVersion = Omit<Version, "id" | "createdAt" | "updatedAt" | "staus">;
+type SafeVersion = NullableToOptional<
+    Omit<Version, "id" | "createdAt" | "updatedAt" | "staus">
+>;
 
 const CreateVersionSchema = z.object({
     version: z.string(),
@@ -16,7 +18,7 @@ const CreateVersionSchema = z.object({
     fuelType: z.enum(getEnumPrismaValues(FuelType)),
     transmissionType: z.enum(getEnumPrismaValues(TransmissionType)),
     engineSize: z.number(),
-    description: z.string(),
+    description: z.string().nullable().optional(),
     modelId: zObjectId(),
 }) satisfies z.ZodType<SafeVersion>;
 

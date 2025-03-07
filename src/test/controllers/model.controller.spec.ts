@@ -23,9 +23,8 @@ describe("ModelController", () => {
 
         modelController = app.get<ModelController>(ModelController);
         res = getMockedResponse();
-        brand = mockedBrand();
         brand = await db.brand.create({
-            data: brand as Brand,
+            data: mockedBrand() as Brand,
         });
 
         model = mockedModel();

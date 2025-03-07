@@ -1,12 +1,14 @@
 import { Model } from "@prisma/client";
 import { z } from "zod";
-import { zObjectId } from "../general.schema";
+import { NullableToOptional, zObjectId } from "../general.schema";
 
-type SafeModel = Omit<Model, "id" | "createdAt" | "updatedAt" | "staus">;
+type SafeModel = NullableToOptional<
+    Omit<Model, "id" | "createdAt" | "updatedAt" | "staus">
+>;
 
 const CreateModelSchema = z.object({
     model: z.string(),
-    description: z.string(),
+    description: z.string().nullable().optional(),
     brandId: zObjectId(),
 }) satisfies z.ZodType<SafeModel>;
 

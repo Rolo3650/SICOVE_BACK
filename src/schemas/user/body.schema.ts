@@ -1,11 +1,14 @@
 import { User, UserRole, UserStatus } from "@prisma/client";
 import { getEnumPrismaValues } from "src/utils/enum";
 import { z } from "zod";
+import { NullableToOptional } from "../general.schema";
 
 interface SafeUser
-    extends Omit<
-        User,
-        "id" | "role" | "userStatus" | "createdAt" | "updatedAt" | "staus"
+    extends NullableToOptional<
+        Omit<
+            User,
+            "id" | "role" | "userStatus" | "createdAt" | "updatedAt" | "staus"
+        >
     > {
     role?: UserRole;
     userStatus?: UserStatus;

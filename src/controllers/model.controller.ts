@@ -19,81 +19,59 @@ import {
     type GeneralIdParams,
     GeneralIdParamsSchema,
 } from "src/schemas/general.schema";
-import { SuccessResponse } from "src/schemas/response.schema";
 import {
-    type CreateUser,
-    CreateUserSchema,
-    LoginSchema,
-    type UpdateUser,
-    UpdateUserSchema,
-} from "src/schemas/user/body.schema";
-import { UserService } from "src/services/user.service";
+    type CreateModel,
+    CreateModelSchema,
+    type UpdateModel,
+    UpdateModelSchema,
+} from "src/schemas/model/body.schema";
+import { SuccessResponse } from "src/schemas/response.schema";
+import { ModelService } from "src/services/model.service";
 import {
     transformZodSchemaToBodySchema,
     transformZodSchemaToParamSchema,
 } from "src/utils/zodToOpenApi";
 
-@Controller("/user")
+@Controller("/model")
 @applyDecorators(ApiBearerAuth())
-export class UserController {
-    private readonly userService: UserService;
+export class ModelController {
+    private readonly modelService: ModelService;
     private readonly jwtService: JwtService;
 
-    constructor(userService: UserService, jwtService: JwtService) {
-        this.userService = userService;
+    constructor(modelService: ModelService, jwtService: JwtService) {
+        this.modelService = modelService;
         this.jwtService = jwtService;
     }
 
     @Get()
-    async getUsers(@Res() res: Response): Promise<Response> {
-        const users = await this.userService.getUsers();
+    async getModels(@Res() res: Response): Promise<Response> {
+        const models = await this.modelService.getModels();
         const response: SuccessResponse = {
-            message: "Users found",
+            message: "Models found",
             statusCode: HttpStatus.FOUND,
             data: {
-                users,
+                models,
             },
         };
         return res.status(response.statusCode).json(response);
     }
 
     @Post()
-    @ApiBody(transformZodSchemaToBodySchema(CreateUserSchema))
+    @ApiBody(transformZodSchemaToBodySchema(CreateModelSchema))
     @UsePipes(
         new ValidationPipe({
-            bodySchema: CreateUserSchema,
+            bodySchema: CreateModelSchema,
         }),
     )
-    async createUser(
+    async createModel(
         @Res() res: Response,
-        @Body() body: CreateUser,
+        @Body() body: CreateModel,
     ): Promise<Response> {
-        const user = await this.userService.createUser(body);
+        const model = await this.modelService.createModel(body);
         const response: SuccessResponse = {
-            message: "User created",
+            message: "Model created",
             statusCode: HttpStatus.CREATED,
-            data: { user },
-        };
-        return res.status(response.statusCode).json(response);
-    }
-
-    @Post("login")
-    @ApiBody(transformZodSchemaToBodySchema(LoginSchema))
-    @UsePipes(
-        new ValidationPipe({
-            bodySchema: LoginSchema,
-        }),
-    )
-    async login(
-        @Res() res: Response,
-        @Body() body: CreateUser,
-    ): Promise<Response> {
-        const user = await this.userService.login(body);
-        const token = this.jwtService.sign(user);
-        const response: SuccessResponse = {
-            message: "User login",
-            statusCode: HttpStatus.OK,
-            data: { user, token },
+            data: { model },
         };
         return res.status(response.statusCode).json(response);
     }
@@ -105,38 +83,38 @@ export class UserController {
             paramsSchema: GeneralIdParamsSchema,
         }),
     )
-    async getUserById(
+    async getModelById(
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        const user = await this.userService.getUser(params.id);
+        const model = await this.modelService.getModel(params.id);
         const response: SuccessResponse = {
-            message: "User found",
+            message: "Model found",
             statusCode: HttpStatus.FOUND,
-            data: { user },
+            data: { model },
         };
         return res.status(response.statusCode).json(response);
     }
 
     @Put("byId/:id")
     @ApiParam(transformZodSchemaToParamSchema(GeneralIdParamsSchema, 0))
-    @ApiBody(transformZodSchemaToBodySchema(UpdateUserSchema))
+    @ApiBody(transformZodSchemaToBodySchema(UpdateModelSchema))
     @UsePipes(
         new ValidationPipe({
             paramsSchema: GeneralIdParamsSchema,
-            bodySchema: UpdateUserSchema,
+            bodySchema: UpdateModelSchema,
         }),
     )
-    async updateUserById(
+    async updateModelById(
         @Res() res: Response,
         @Param() params: GeneralIdParams,
-        @Body() body: UpdateUser,
+        @Body() body: UpdateModel,
     ): Promise<Response> {
-        const user = await this.userService.updateUser(body, params.id);
+        const model = await this.modelService.updateModel(body, params.id);
         const response: SuccessResponse = {
-            message: "User updated",
+            message: "Model updated",
             statusCode: HttpStatus.OK,
-            data: { user },
+            data: { model },
         };
         return res.status(response.statusCode).json(response);
     }
@@ -152,9 +130,9 @@ export class UserController {
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        await this.userService.deleteUser(params.id);
+        await this.modelService.deleteModel(params.id);
         const response: SuccessResponse = {
-            message: "User deleted",
+            message: "Model deleted",
             statusCode: HttpStatus.OK,
             data: {},
         };

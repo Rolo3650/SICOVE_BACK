@@ -78,7 +78,7 @@ describe("BrandController", () => {
             const brandObtained = await brandController.getBrandById(
                 res as Response,
                 {
-                    id: brand.id,
+                    id: brand.id as string,
                 },
             );
             expect(res.json).toHaveBeenCalled();
@@ -102,7 +102,7 @@ describe("BrandController", () => {
             const brandUpdated = await brandController.updateBrandById(
                 res as Response,
                 {
-                    id: brand.id,
+                    id: brand.id as string,
                 },
                 {
                     brand: "Ford",
@@ -134,7 +134,7 @@ describe("BrandController", () => {
             const brandDeleted = await brandController.deleteById(
                 res as Response,
                 {
-                    id: brand.id,
+                    id: brand.id as string,
                 },
             );
             expect(res.json).toHaveBeenCalled();

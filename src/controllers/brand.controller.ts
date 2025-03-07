@@ -87,7 +87,7 @@ export class BrandController {
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        const brand = await this.brandService.getBrand(params.id as string);
+        const brand = await this.brandService.getBrand(params.id);
         const response: SuccessResponse = {
             message: "Brand found",
             statusCode: HttpStatus.FOUND,
@@ -110,10 +110,7 @@ export class BrandController {
         @Param() params: GeneralIdParams,
         @Body() body: UpdateBrand,
     ): Promise<Response> {
-        const brand = await this.brandService.updateBrand(
-            body,
-            params.id as string,
-        );
+        const brand = await this.brandService.updateBrand(body, params.id);
         const response: SuccessResponse = {
             message: "Brand updated",
             statusCode: HttpStatus.OK,
@@ -133,7 +130,7 @@ export class BrandController {
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        await this.brandService.deleteBrand(params.id as string);
+        await this.brandService.deleteBrand(params.id);
         const response: SuccessResponse = {
             message: "Brand deleted",
             statusCode: HttpStatus.OK,

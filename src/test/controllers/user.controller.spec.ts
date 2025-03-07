@@ -81,7 +81,7 @@ describe("UserController", () => {
             const userObtained = await userController.getUserById(
                 res as Response,
                 {
-                    id: user.id,
+                    id: user.id as string,
                 },
             );
             expect(res.json).toHaveBeenCalled();
@@ -103,7 +103,7 @@ describe("UserController", () => {
             const userUpdated = await userController.updateUserById(
                 res as Response,
                 {
-                    id: user.id,
+                    id: user.id as string,
                 },
                 {
                     firstName: "Ian",
@@ -131,7 +131,7 @@ describe("UserController", () => {
             const userDeleted = await userController.deleteById(
                 res as Response,
                 {
-                    id: user.id,
+                    id: user.id as string,
                 },
             );
             expect(res.json).toHaveBeenCalled();

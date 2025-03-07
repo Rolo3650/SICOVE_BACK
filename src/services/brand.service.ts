@@ -12,7 +12,7 @@ export class BrandService {
         this.configService = configService;
     }
 
-    async getBrands(): Promise<Omit<Brand, "password">[]> {
+    async getBrands(): Promise<Brand[]> {
         const brands = await db.brand.findMany({
             where: {
                 staus: true,
@@ -21,7 +21,7 @@ export class BrandService {
         return brands;
     }
 
-    async getBrand(id: string): Promise<Omit<Brand, "password">> {
+    async getBrand(id: string): Promise<Brand> {
         const brand = await db.brand.findUnique({
             where: {
                 id,
@@ -34,17 +34,14 @@ export class BrandService {
         return brand;
     }
 
-    async createBrand(brandDto: CreateBrand): Promise<Omit<Brand, "password">> {
+    async createBrand(brandDto: CreateBrand): Promise<Brand> {
         const brand = await db.brand.create({
             data: brandDto,
         });
         return brand;
     }
 
-    async updateBrand(
-        brandDto: UpdateBrand,
-        id: string,
-    ): Promise<Omit<Brand, "password">> {
+    async updateBrand(brandDto: UpdateBrand, id: string): Promise<Brand> {
         const brand = await db.brand.findUnique({
             where: {
                 id,

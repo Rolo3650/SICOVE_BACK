@@ -3,7 +3,7 @@ import { Response } from "express";
 import { UserController } from "src/controllers/user.controller";
 import { db } from "src/database/connection.database";
 import { zObjectId } from "src/schemas/general.schema";
-import { CreateUser, CreateUserSchema } from "src/schemas/user/body.schemas";
+import { CreateUser, CreateUserSchema } from "src/schemas/user/body.schema";
 import { getApplication } from "src/test/core/application.core";
 import {
     getMockedResponse,

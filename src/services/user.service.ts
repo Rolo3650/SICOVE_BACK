@@ -9,7 +9,7 @@ import { ConfigService } from "@nestjs/config";
 import { User, UserStatus } from "@prisma/client";
 import { compare, genSalt, hash } from "bcrypt";
 import { db } from "src/database/connection.database";
-import { CreateUser, UpdateUser } from "src/schemas/user/body.schemas";
+import { CreateUser, UpdateUser } from "src/schemas/user/body.schema";
 
 @Injectable()
 export class UserService {

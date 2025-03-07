@@ -16,84 +16,62 @@ import { ApiBearerAuth, ApiBody, ApiParam } from "@nestjs/swagger";
 import { type Response } from "express";
 import { ValidationPipe } from "src/pipes/validation.pipe";
 import {
+    type CreateBrand,
+    CreateBrandSchema,
+    type UpdateBrand,
+    UpdateBrandSchema,
+} from "src/schemas/brand/body.schema";
+import {
     type GeneralIdParams,
     GeneralIdParamsSchema,
 } from "src/schemas/general.schema";
 import { SuccessResponse } from "src/schemas/response.schema";
-import {
-    type CreateUser,
-    CreateUserSchema,
-    LoginSchema,
-    type UpdateUser,
-    UpdateUserSchema,
-} from "src/schemas/user/body.schema";
-import { UserService } from "src/services/user.service";
+import { BrandService } from "src/services/brand.service";
 import {
     transformZodSchemaToBodySchema,
     transformZodSchemaToParamSchema,
 } from "src/utils/zodToOpenApi";
 
-@Controller("/user")
+@Controller("/brand")
 @applyDecorators(ApiBearerAuth())
-export class UserController {
-    private readonly userService: UserService;
+export class BrandController {
+    private readonly brandService: BrandService;
     private readonly jwtService: JwtService;
 
-    constructor(userService: UserService, jwtService: JwtService) {
-        this.userService = userService;
+    constructor(brandService: BrandService, jwtService: JwtService) {
+        this.brandService = brandService;
         this.jwtService = jwtService;
     }
 
     @Get()
-    async getUsers(@Res() res: Response): Promise<Response> {
-        const users = await this.userService.getUsers();
+    async getBrands(@Res() res: Response): Promise<Response> {
+        const brands = await this.brandService.getBrands();
         const response: SuccessResponse = {
-            message: "Users found",
+            message: "Brands found",
             statusCode: HttpStatus.FOUND,
             data: {
-                users,
+                brands,
             },
         };
         return res.status(response.statusCode).json(response);
     }
 
     @Post()
-    @ApiBody(transformZodSchemaToBodySchema(CreateUserSchema))
+    @ApiBody(transformZodSchemaToBodySchema(CreateBrandSchema))
     @UsePipes(
         new ValidationPipe({
-            bodySchema: CreateUserSchema,
+            bodySchema: CreateBrandSchema,
         }),
     )
-    async createUser(
+    async createBrand(
         @Res() res: Response,
-        @Body() body: CreateUser,
+        @Body() body: CreateBrand,
     ): Promise<Response> {
-        const user = await this.userService.createUser(body);
+        const brand = await this.brandService.createBrand(body);
         const response: SuccessResponse = {
-            message: "User created",
+            message: "Brand created",
             statusCode: HttpStatus.CREATED,
-            data: { user },
-        };
-        return res.status(response.statusCode).json(response);
-    }
-
-    @Post("login")
-    @ApiBody(transformZodSchemaToBodySchema(LoginSchema))
-    @UsePipes(
-        new ValidationPipe({
-            bodySchema: LoginSchema,
-        }),
-    )
-    async login(
-        @Res() res: Response,
-        @Body() body: CreateUser,
-    ): Promise<Response> {
-        const user = await this.userService.login(body);
-        const token = this.jwtService.sign(user);
-        const response: SuccessResponse = {
-            message: "User login",
-            statusCode: HttpStatus.OK,
-            data: { user, token },
+            data: { brand },
         };
         return res.status(response.statusCode).json(response);
     }
@@ -105,41 +83,41 @@ export class UserController {
             paramsSchema: GeneralIdParamsSchema,
         }),
     )
-    async getUserById(
+    async getBrandById(
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        const user = await this.userService.getUser(params.id as string);
+        const brand = await this.brandService.getBrand(params.id as string);
         const response: SuccessResponse = {
-            message: "User found",
+            message: "Brand found",
             statusCode: HttpStatus.FOUND,
-            data: { user },
+            data: { brand },
         };
         return res.status(response.statusCode).json(response);
     }
 
     @Put("byId/:id")
     @ApiParam(transformZodSchemaToParamSchema(GeneralIdParamsSchema, 0))
-    @ApiBody(transformZodSchemaToBodySchema(UpdateUserSchema))
+    @ApiBody(transformZodSchemaToBodySchema(UpdateBrandSchema))
     @UsePipes(
         new ValidationPipe({
             paramsSchema: GeneralIdParamsSchema,
-            bodySchema: UpdateUserSchema,
+            bodySchema: UpdateBrandSchema,
         }),
     )
-    async updateUserById(
+    async updateBrandById(
         @Res() res: Response,
         @Param() params: GeneralIdParams,
-        @Body() body: UpdateUser,
+        @Body() body: UpdateBrand,
     ): Promise<Response> {
-        const user = await this.userService.updateUser(
+        const brand = await this.brandService.updateBrand(
             body,
             params.id as string,
         );
         const response: SuccessResponse = {
-            message: "User updated",
+            message: "Brand updated",
             statusCode: HttpStatus.OK,
-            data: { user },
+            data: { brand },
         };
         return res.status(response.statusCode).json(response);
     }
@@ -155,9 +133,9 @@ export class UserController {
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        await this.userService.deleteUser(params.id as string);
+        await this.brandService.deleteBrand(params.id as string);
         const response: SuccessResponse = {
-            message: "User deleted",
+            message: "Brand deleted",
             statusCode: HttpStatus.OK,
             data: {},
         };

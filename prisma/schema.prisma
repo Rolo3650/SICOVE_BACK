@@ -58,7 +58,7 @@ model User {
 model Brand {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  brand String
+  brand       String
   description String?
 
   createdAt DateTime @default(now())
@@ -71,7 +71,7 @@ model Brand {
 model Model {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  model String
+  model       String
   description String?
 
   brandId String @db.ObjectId
@@ -87,11 +87,12 @@ model Model {
 model Version {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  version     String
-  vehicleType VehicleType
-  fuelType FuelType
+  version          String
+  vehicleType      VehicleType
+  fuelType         FuelType
   transmissionType TransmissionType
-  description String?
+  description      String?
+  engineSize       Float
 
   modelId String @db.ObjectId
   model   Model  @relation(fields: [modelId], references: [id])

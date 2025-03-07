@@ -54,9 +54,11 @@ describe("UserController", () => {
         it("should return users", async () => {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { password, ...userDto } = mockedUser();
-            const userCreated = await userController.getUsers(res as Response);
+            const usersObtained = await userController.getUsers(
+                res as Response,
+            );
             expect(res.json).toHaveBeenCalled();
-            const { data } = testMockedResponse(userCreated.json);
+            const { data } = testMockedResponse(usersObtained.json);
             if (
                 "users" in data &&
                 Array.isArray(data.users) &&
@@ -76,14 +78,14 @@ describe("UserController", () => {
         it("should return user by id", async () => {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { password, ...userDto } = mockedUser();
-            const userCreated = await userController.getUserById(
+            const userObtained = await userController.getUserById(
                 res as Response,
                 {
                     id: user.id,
                 },
             );
             expect(res.json).toHaveBeenCalled();
-            const { data } = testMockedResponse(userCreated.json);
+            const { data } = testMockedResponse(userObtained.json);
             if ("user" in data) {
                 expect(zObjectId().safeParse(data.user.id).success).toBe(true);
                 expect(zObjectId().safeParse(data.user.id).data).toBe(user.id);
@@ -98,7 +100,7 @@ describe("UserController", () => {
         it("should return user updated by id", async () => {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { password, ...userDto } = mockedUser();
-            const userCreated = await userController.updateUserById(
+            const userUpdated = await userController.updateUserById(
                 res as Response,
                 {
                     id: user.id,
@@ -109,7 +111,7 @@ describe("UserController", () => {
                 },
             );
             expect(res.json).toHaveBeenCalled();
-            const { data } = testMockedResponse(userCreated.json);
+            const { data } = testMockedResponse(userUpdated.json);
             if ("user" in data) {
                 expect(zObjectId().safeParse(data.user.id).success).toBe(true);
                 expect(zObjectId().safeParse(data.user.id).data).toBe(user.id);
@@ -126,14 +128,14 @@ describe("UserController", () => {
 
     describe("deleteUserById", () => {
         it("should return nothing", async () => {
-            const userCreated = await userController.deleteById(
+            const userDeleted = await userController.deleteById(
                 res as Response,
                 {
                     id: user.id,
                 },
             );
             expect(res.json).toHaveBeenCalled();
-            const { data } = testMockedResponse(userCreated.json);
+            const { data } = testMockedResponse(userDeleted.json);
             expect(data).toEqual({});
         });
     });

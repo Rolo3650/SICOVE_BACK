@@ -2,9 +2,11 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule, JwtModuleOptions } from "@nestjs/jwt";
 import { Test, type TestingModule } from "@nestjs/testing";
 import { AppController } from "src/controllers/app.controller";
+import { BrandController } from "src/controllers/brand.controller";
 import { UserController } from "src/controllers/user.controller";
 import { validateEnv } from "src/core/configuration";
 import { AppService } from "src/services/app.service";
+import { BrandService } from "src/services/brand.service";
 import { UserService } from "src/services/user.service";
 
 const getApplication = async (): Promise<TestingModule> => {
@@ -29,8 +31,8 @@ const getApplication = async (): Promise<TestingModule> => {
                 },
             }),
         ],
-        controllers: [AppController, UserController],
-        providers: [AppService, UserService],
+        controllers: [AppController, UserController, BrandController],
+        providers: [AppService, UserService, BrandService],
     }).compile();
 
     return app;

@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { HttpAdapterHost, NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { db } from "src/database/connection.database";
-import { TokenGuard } from "src/guards/tokenGuard.guard";
+// import { TokenGuard } from "src/guards/tokenGuard.guard";
 import { ExceptionsHandler } from "src/middlewares/exceptions.middleware";
 import { AppModule } from "src/modules/app.module";
 import { hiddeMongoPassword } from "src/utils/reggex";
@@ -25,7 +25,7 @@ async function bootstrap(): Promise<void> {
     SwaggerModule.setup("/api/docs", app, document);
 
     const configService = app.get(ConfigService);
-    app.useGlobalGuards(new TokenGuard(configService));
+    // app.useGlobalGuards(new TokenGuard(configService));
     const port = configService.get<number>("PORT");
     const dbUrl = configService.get<string>("DATABASE_URL");
 

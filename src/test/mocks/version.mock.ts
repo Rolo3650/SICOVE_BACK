@@ -8,6 +8,7 @@ const mockedVersion = (): Partial<Version> => {
         engineSize: 1.8,
         transmissionType: "Automatic",
         vehicleType: "Sedan",
+        year: new Date("2024-01-01"),
     };
 };
 

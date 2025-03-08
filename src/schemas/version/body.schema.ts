@@ -20,6 +20,7 @@ const CreateVersionSchema = z.object({
     engineSize: z.number(),
     description: z.string().nullable().optional(),
     modelId: zObjectId(),
+    year: z.coerce.date(),
 }) satisfies z.ZodType<SafeVersion>;
 
 const UpdateVersionSchema = CreateVersionSchema.partial();

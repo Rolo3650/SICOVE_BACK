@@ -93,6 +93,7 @@ model Version {
   transmissionType TransmissionType
   description      String?
   engineSize       Float
+  year         DateTime @default(now())
 
   modelId String @db.ObjectId
   model   Model  @relation(fields: [modelId], references: [id])
@@ -109,7 +110,6 @@ model Vehicle {
 
   licencePlate String?
   VIN          String?
-  year         DateTime @default(now())
   color        String
   mileage      Int
   engineNumber String

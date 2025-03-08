@@ -128,9 +128,8 @@ describe("VersionController", () => {
                     id: version.id as string,
                 },
                 {
-                    version: "Ford",
-                    description:
-                        "Ford Motor Company, commonly known as Ford, is an American multinational automaker that has its main headquarters in Dearborn, Michigan, a suburb of Detroit.",
+                    version: "GTI",
+                    description: "Less Powefull.",
                 },
             );
             expect(res.json).toHaveBeenCalled();
@@ -144,9 +143,8 @@ describe("VersionController", () => {
                 );
                 expect(data.version).toMatchObject({
                     ...expectedVersion,
-                    version: "Ford",
-                    description:
-                        "Ford Motor Company, commonly known as Ford, is an American multinational automaker that has its main headquarters in Dearborn, Michigan, a suburb of Detroit.",
+                    version: "GTI",
+                    description: "Less Powefull.",
                 });
             }
 

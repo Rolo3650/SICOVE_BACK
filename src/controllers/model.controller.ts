@@ -48,7 +48,7 @@ export class ModelController {
         const models = await this.modelService.getModels();
         const response: SuccessResponse = {
             message: "Models found",
-            statusCode: HttpStatus.FOUND,
+            statusCode: HttpStatus.OK,
             data: {
                 models,
             },
@@ -90,7 +90,7 @@ export class ModelController {
         const model = await this.modelService.getModel(params.id);
         const response: SuccessResponse = {
             message: "Model found",
-            statusCode: HttpStatus.FOUND,
+            statusCode: HttpStatus.OK,
             data: { model },
         };
         return res.status(response.statusCode).json(response);

@@ -48,7 +48,7 @@ export class VersionController {
         const versions = await this.versionService.getVersions();
         const response: SuccessResponse = {
             message: "Versions found",
-            statusCode: HttpStatus.FOUND,
+            statusCode: HttpStatus.OK,
             data: {
                 versions,
             },
@@ -90,7 +90,7 @@ export class VersionController {
         const version = await this.versionService.getVersion(params.id);
         const response: SuccessResponse = {
             message: "Version found",
-            statusCode: HttpStatus.FOUND,
+            statusCode: HttpStatus.OK,
             data: { version },
         };
         return res.status(response.statusCode).json(response);

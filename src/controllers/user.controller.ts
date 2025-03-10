@@ -49,7 +49,7 @@ export class UserController {
         const users = await this.userService.getUsers();
         const response: SuccessResponse = {
             message: "Users found",
-            statusCode: HttpStatus.FOUND,
+            statusCode: HttpStatus.OK,
             data: {
                 users,
             },
@@ -112,7 +112,7 @@ export class UserController {
         const user = await this.userService.getUser(params.id);
         const response: SuccessResponse = {
             message: "User found",
-            statusCode: HttpStatus.FOUND,
+            statusCode: HttpStatus.OK,
             data: { user },
         };
         return res.status(response.statusCode).json(response);

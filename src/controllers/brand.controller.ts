@@ -48,7 +48,7 @@ export class BrandController {
         const brands = await this.brandService.getBrands();
         const response: SuccessResponse = {
             message: "Brands found",
-            statusCode: HttpStatus.FOUND,
+            statusCode: HttpStatus.OK,
             data: {
                 brands,
             },
@@ -90,7 +90,7 @@ export class BrandController {
         const brand = await this.brandService.getBrand(params.id);
         const response: SuccessResponse = {
             message: "Brand found",
-            statusCode: HttpStatus.FOUND,
+            statusCode: HttpStatus.OK,
             data: { brand },
         };
         return res.status(response.statusCode).json(response);

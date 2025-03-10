@@ -12,6 +12,7 @@ async function bootstrap(): Promise<void> {
     const logger = new Logger("Main");
 
     const app = await NestFactory.create(AppModule);
+    app.enableCors();
     app.setGlobalPrefix("/api/v1");
 
     const config = new DocumentBuilder()

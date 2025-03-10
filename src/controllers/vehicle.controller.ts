@@ -48,7 +48,7 @@ export class VehicleController {
         const vehicles = await this.vehicleService.getVehicles();
         const response: SuccessResponse = {
             message: "Vehicles found",
-            statusCode: HttpStatus.FOUND,
+            statusCode: HttpStatus.OK,
             data: {
                 vehicles,
             },
@@ -90,7 +90,7 @@ export class VehicleController {
         const vehicle = await this.vehicleService.getVehicle(params.id);
         const response: SuccessResponse = {
             message: "Vehicle found",
-            statusCode: HttpStatus.FOUND,
+            statusCode: HttpStatus.OK,
             data: { vehicle },
         };
         return res.status(response.statusCode).json(response);

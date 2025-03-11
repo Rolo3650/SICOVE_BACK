@@ -15,7 +15,7 @@ export class BrandService {
     async getBrands(): Promise<Brand[]> {
         const brands = await db.brand.findMany({
             where: {
-                staus: true,
+                status: true,
             },
         });
         return brands;
@@ -25,7 +25,7 @@ export class BrandService {
         const brand = await db.brand.findUnique({
             where: {
                 id,
-                staus: true,
+                status: true,
             },
         });
         if (!brand) {
@@ -45,7 +45,7 @@ export class BrandService {
         const brand = await db.brand.findUnique({
             where: {
                 id,
-                staus: true,
+                status: true,
             },
         });
 
@@ -67,7 +67,7 @@ export class BrandService {
         const brand = await db.brand.findUnique({
             where: {
                 id,
-                staus: true,
+                status: true,
             },
         });
 
@@ -78,7 +78,7 @@ export class BrandService {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const _deletedBrand = await db.brand.update({
             data: {
-                staus: false,
+                status: false,
             },
             where: {
                 id,

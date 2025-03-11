@@ -3,7 +3,7 @@ import { z } from "zod";
 import { NullableToOptional } from "../general.schema";
 
 type SafeBrand = NullableToOptional<
-    Omit<Brand, "id" | "createdAt" | "updatedAt" | "staus">
+    Omit<Brand, "id" | "createdAt" | "updatedAt" | "status">
 >;
 
 const CreateBrandSchema = z.object({

@@ -9,7 +9,7 @@ import { z } from "zod";
 import { NullableToOptional, zObjectId } from "../general.schema";
 
 type SafeVersion = NullableToOptional<
-    Omit<Version, "id" | "createdAt" | "updatedAt" | "staus">
+    Omit<Version, "id" | "createdAt" | "updatedAt" | "status">
 >;
 
 const CreateVersionSchema = z.object({

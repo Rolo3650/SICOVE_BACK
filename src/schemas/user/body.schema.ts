@@ -7,7 +7,7 @@ interface SafeUser
     extends NullableToOptional<
         Omit<
             User,
-            "id" | "role" | "userStatus" | "createdAt" | "updatedAt" | "staus"
+            "id" | "role" | "userStatus" | "createdAt" | "updatedAt" | "status"
         >
     > {
     role?: UserRole;

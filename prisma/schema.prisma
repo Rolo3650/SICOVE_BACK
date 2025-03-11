@@ -52,7 +52,7 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
-  staus     Boolean  @default(true)
+  status    Boolean  @default(true)
 }
 
 model Brand {
@@ -63,7 +63,7 @@ model Brand {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
-  staus     Boolean  @default(true)
+  status    Boolean  @default(true)
 
   Model Model[]
 }
@@ -79,7 +79,7 @@ model Model {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
-  staus     Boolean  @default(true)
+  status    Boolean  @default(true)
 
   Version Version[]
 }
@@ -93,14 +93,14 @@ model Version {
   transmissionType TransmissionType
   description      String?
   engineSize       Float
-  year         DateTime @default(now())
+  year             DateTime         @default(now())
 
   modelId String @db.ObjectId
   model   Model  @relation(fields: [modelId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
-  staus     Boolean  @default(true)
+  status    Boolean  @default(true)
 
   Vehicle Vehicle[]
 }
@@ -120,5 +120,5 @@ model Vehicle {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
-  staus     Boolean  @default(true)
+  status    Boolean  @default(true)
 }

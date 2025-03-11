@@ -22,7 +22,7 @@ export class UserService {
     async getUsers(): Promise<Omit<User, "password">[]> {
         const users = await db.user.findMany({
             where: {
-                staus: true,
+                status: true,
             },
         });
         return users;
@@ -32,7 +32,7 @@ export class UserService {
         const user = await db.user.findUnique({
             where: {
                 id,
-                staus: true,
+                status: true,
             },
         });
         if (!user) {
@@ -45,7 +45,7 @@ export class UserService {
         const ifUser = await db.user.findUnique({
             where: {
                 email: userDto.email,
-                staus: true,
+                status: true,
             },
         });
 
@@ -81,7 +81,7 @@ export class UserService {
         const user = await db.user.findUnique({
             where: {
                 email: userDto.email,
-                staus: true,
+                status: true,
             },
             omit: {
                 password: false,
@@ -106,7 +106,7 @@ export class UserService {
         const user = await db.user.findUnique({
             where: {
                 id,
-                staus: true,
+                status: true,
             },
         });
 
@@ -130,7 +130,7 @@ export class UserService {
         const user = await db.user.findUnique({
             where: {
                 id,
-                staus: true,
+                status: true,
             },
         });
 
@@ -141,7 +141,7 @@ export class UserService {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const _deletedUser = await db.user.update({
             data: {
-                staus: false,
+                status: false,
                 userStatus: UserStatus.inactive,
             },
             where: {

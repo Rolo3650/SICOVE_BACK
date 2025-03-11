@@ -18,7 +18,7 @@ export class VehicleService {
     async getVehicles(): Promise<Vehicle[]> {
         const vehicles = await db.vehicle.findMany({
             where: {
-                staus: true,
+                status: true,
             },
         });
         return vehicles;
@@ -28,7 +28,7 @@ export class VehicleService {
         const vehicle = await db.vehicle.findUnique({
             where: {
                 id,
-                staus: true,
+                status: true,
             },
         });
         if (!vehicle) {
@@ -41,7 +41,7 @@ export class VehicleService {
         const version = await db.version.findUnique({
             where: {
                 id: vehicleDto.versionId,
-                staus: true,
+                status: true,
             },
         });
         if (!version) {
@@ -62,7 +62,7 @@ export class VehicleService {
             const version = await db.version.findUnique({
                 where: {
                     id: vehicleDto.versionId,
-                    staus: true,
+                    status: true,
                 },
             });
             if (!version) {
@@ -73,7 +73,7 @@ export class VehicleService {
         const vehicle = await db.vehicle.findUnique({
             where: {
                 id,
-                staus: true,
+                status: true,
             },
         });
 
@@ -95,7 +95,7 @@ export class VehicleService {
         const vehicle = await db.vehicle.findUnique({
             where: {
                 id,
-                staus: true,
+                status: true,
             },
         });
 
@@ -106,7 +106,7 @@ export class VehicleService {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const _deletedVehicle = await db.vehicle.update({
             data: {
-                staus: false,
+                status: false,
             },
             where: {
                 id,

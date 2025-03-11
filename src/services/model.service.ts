@@ -15,7 +15,7 @@ export class ModelService {
     async getModels(): Promise<Model[]> {
         const models = await db.model.findMany({
             where: {
-                staus: true,
+                status: true,
             },
         });
         return models;
@@ -25,7 +25,7 @@ export class ModelService {
         const model = await db.model.findUnique({
             where: {
                 id,
-                staus: true,
+                status: true,
             },
         });
         if (!model) {
@@ -38,7 +38,7 @@ export class ModelService {
         const brand = await db.brand.findUnique({
             where: {
                 id: modelDto.brandId,
-                staus: true,
+                status: true,
             },
         });
         if (!brand) {
@@ -56,7 +56,7 @@ export class ModelService {
             const brand = await db.brand.findUnique({
                 where: {
                     id: modelDto.brandId,
-                    staus: true,
+                    status: true,
                 },
             });
             if (!brand) {
@@ -67,7 +67,7 @@ export class ModelService {
         const model = await db.model.findUnique({
             where: {
                 id,
-                staus: true,
+                status: true,
             },
         });
 
@@ -89,7 +89,7 @@ export class ModelService {
         const model = await db.model.findUnique({
             where: {
                 id,
-                staus: true,
+                status: true,
             },
         });
 
@@ -100,7 +100,7 @@ export class ModelService {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const _deletedModel = await db.model.update({
             data: {
-                staus: false,
+                status: false,
             },
             where: {
                 id,

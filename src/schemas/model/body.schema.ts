@@ -3,7 +3,7 @@ import { z } from "zod";
 import { NullableToOptional, zObjectId } from "../general.schema";
 
 type SafeModel = NullableToOptional<
-    Omit<Model, "id" | "createdAt" | "updatedAt" | "staus">
+    Omit<Model, "id" | "createdAt" | "updatedAt" | "status">
 >;
 
 const CreateModelSchema = z.object({

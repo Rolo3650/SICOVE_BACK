@@ -18,7 +18,7 @@ export class VersionService {
     async getVersions(): Promise<Version[]> {
         const versions = await db.version.findMany({
             where: {
-                staus: true,
+                status: true,
             },
         });
         return versions;
@@ -28,7 +28,7 @@ export class VersionService {
         const version = await db.version.findUnique({
             where: {
                 id,
-                staus: true,
+                status: true,
             },
         });
         if (!version) {
@@ -41,7 +41,7 @@ export class VersionService {
         const model = await db.model.findUnique({
             where: {
                 id: versionDto.modelId,
-                staus: true,
+                status: true,
             },
         });
         if (!model) {
@@ -62,7 +62,7 @@ export class VersionService {
             const model = await db.model.findUnique({
                 where: {
                     id: versionDto.modelId,
-                    staus: true,
+                    status: true,
                 },
             });
             if (!model) {
@@ -73,7 +73,7 @@ export class VersionService {
         const version = await db.version.findUnique({
             where: {
                 id,
-                staus: true,
+                status: true,
             },
         });
 
@@ -95,7 +95,7 @@ export class VersionService {
         const version = await db.version.findUnique({
             where: {
                 id,
-                staus: true,
+                status: true,
             },
         });
 
@@ -106,7 +106,7 @@ export class VersionService {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const _deletedVersion = await db.version.update({
             data: {
-                staus: false,
+                status: false,
             },
             where: {
                 id,

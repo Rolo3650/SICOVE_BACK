@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { Version } from "@prisma/client";
+import { Prisma, Version } from "@prisma/client";
 import { db } from "src/database/connection.database";
 import type {
     CreateVersion,
@@ -15,21 +15,30 @@ export class VersionService {
         this.configService = configService;
     }
 
-    async getVersions(): Promise<Version[]> {
+    async getVersions(props?: {
+        include?: Prisma.VersionInclude;
+    }): Promise<Version[]> {
         const versions = await db.version.findMany({
             where: {
                 status: true,
             },
+            include: props?.include,
         });
         return versions;
     }
 
-    async getVersion(id: string): Promise<Version> {
+    async getVersion(
+        id: string,
+        props?: {
+            include?: Prisma.VersionInclude;
+        },
+    ): Promise<Version> {
         const version = await db.version.findUnique({
             where: {
                 id,
                 status: true,
             },
+            include: props?.include,
         });
         if (!version) {
             throw new NotFoundException("Version not found");

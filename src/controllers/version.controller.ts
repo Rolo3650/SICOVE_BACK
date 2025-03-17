@@ -45,7 +45,11 @@ export class VersionController {
 
     @Get()
     async getVersions(@Res() res: Response): Promise<Response> {
-        const versions = await this.versionService.getVersions();
+        const versions = await this.versionService.getVersions({
+            include: {
+                model: true,
+            },
+        });
         const response: SuccessResponse = {
             message: "Versions found",
             statusCode: HttpStatus.OK,
@@ -87,7 +91,15 @@ export class VersionController {
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        const version = await this.versionService.getVersion(params.id);
+        const version = await this.versionService.getVersion(params.id, {
+            include: {
+                model: {
+                    include: {
+                        brand: true,
+                    },
+                },
+            },
+        });
         const response: SuccessResponse = {
             message: "Version found",
             statusCode: HttpStatus.OK,

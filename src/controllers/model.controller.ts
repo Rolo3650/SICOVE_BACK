@@ -45,7 +45,11 @@ export class ModelController {
 
     @Get()
     async getModels(@Res() res: Response): Promise<Response> {
-        const models = await this.modelService.getModels();
+        const models = await this.modelService.getModels({
+            include: {
+                brand: true,
+            },
+        });
         const response: SuccessResponse = {
             message: "Models found",
             statusCode: HttpStatus.OK,
@@ -87,7 +91,11 @@ export class ModelController {
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        const model = await this.modelService.getModel(params.id);
+        const model = await this.modelService.getModel(params.id, {
+            include: {
+                brand: true,
+            },
+        });
         const response: SuccessResponse = {
             message: "Model found",
             statusCode: HttpStatus.OK,

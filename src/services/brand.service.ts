@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { Brand } from "@prisma/client";
+import { Brand, Prisma } from "@prisma/client";
 import { db } from "src/database/connection.database";
 import type { CreateBrand, UpdateBrand } from "src/schemas/brand/body.schema";
 
@@ -12,11 +12,14 @@ export class BrandService {
         this.configService = configService;
     }
 
-    async getBrands(): Promise<Brand[]> {
+    async getBrands(props?: {
+        include?: Prisma.BrandInclude;
+    }): Promise<Brand[]> {
         const brands = await db.brand.findMany({
             where: {
                 status: true,
             },
+            include: props?.include,
         });
         return brands;
     }

@@ -1,4 +1,4 @@
-import { Brand, Model, Version } from "@prisma/client";
+import { Brand, Model, Prisma, Version } from "@prisma/client";
 import { Response } from "express";
 import { VersionController } from "src/controllers/version.controller";
 import { db } from "src/database/connection.database";
@@ -113,7 +113,14 @@ describe("VersionController", () => {
                 expect(data.version).toMatchObject(version);
             }
 
-            version = data.version as Version;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { model, ...versionDto } =
+                data.version as Prisma.VersionGetPayload<{
+                    include: {
+                        model: true;
+                    };
+                }>;
+            version = versionDto as Version;
         });
     });
 

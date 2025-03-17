@@ -1,4 +1,4 @@
-import { Brand, Model } from "@prisma/client";
+import { Brand, Model, Prisma } from "@prisma/client";
 import { Response } from "express";
 import { ModelController } from "src/controllers/model.controller";
 import { db } from "src/database/connection.database";
@@ -90,15 +90,21 @@ describe("ModelController", () => {
             );
             expect(res.json).toHaveBeenCalled();
             const { data } = testMockedResponse(modelObtained.json);
-            if ("model" in data) {
+            if ("model" in data && "brand" in data.model) {
                 expect(zObjectId().safeParse(data.model.id).success).toBe(true);
                 expect(zObjectId().safeParse(data.model.id).data).toBe(
                     model.id,
                 );
                 expect(data.model).toMatchObject(model);
             }
-
-            model = data.model as Model;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { brand, ...modelDto } =
+                data.model as Prisma.ModelGetPayload<{
+                    include: {
+                        brand: true;
+                    };
+                }>;
+            model = modelDto as Model;
         });
     });
 

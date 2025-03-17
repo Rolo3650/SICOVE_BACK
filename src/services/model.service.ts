@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { Model } from "@prisma/client";
+import { Model, Prisma } from "@prisma/client";
 import { db } from "src/database/connection.database";
 import type { CreateModel, UpdateModel } from "src/schemas/model/body.schema";
 
@@ -12,21 +12,30 @@ export class ModelService {
         this.configService = configService;
     }
 
-    async getModels(): Promise<Model[]> {
+    async getModels(props?: {
+        include?: Prisma.ModelInclude;
+    }): Promise<Model[]> {
         const models = await db.model.findMany({
             where: {
                 status: true,
             },
+            include: props?.include,
         });
         return models;
     }
 
-    async getModel(id: string): Promise<Model> {
+    async getModel(
+        id: string,
+        props?: {
+            include?: Prisma.ModelInclude;
+        },
+    ): Promise<Model> {
         const model = await db.model.findUnique({
             where: {
                 id,
                 status: true,
             },
+            include: props?.include,
         });
         if (!model) {
             throw new NotFoundException("Model not found");

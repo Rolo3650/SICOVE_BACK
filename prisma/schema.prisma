@@ -118,16 +118,18 @@ model Vehicle {
   versionId String  @db.ObjectId
   version   Version @relation(fields: [versionId], references: [id])
 
+  branchId String?  @db.ObjectId
+  branch   Branch? @relation(fields: [branchId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
   status    Boolean  @default(true)
 }
 
-
-model Country{
+model Country {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  name  String @unique
+  country String @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
@@ -136,58 +138,63 @@ model Country{
   State State[]
 }
 
-model State{
+model State {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  name String
-  countryId String @db.ObjectId
-  country Country @relation(fields: [countryId], references: [id])
+  state     String
+  countryId String  @db.ObjectId
+  country   Country @relation(fields: [countryId], references: [id])
 
-  reatedAt DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
   status    Boolean  @default(true)
 
   Municipality Municipality[]
 }
 
-model Municipality{
+model Municipality {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  name String
-  stateId String @db.ObjectId
-  state State @relation(fields: [stateId], references: [id])
+  municipality String
+  stateId      String @db.ObjectId
+  state        State  @relation(fields: [stateId], references: [id])
 
   City City[]
 
-  reatedAt DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
   status    Boolean  @default(true)
 }
 
-model City{
+model City {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  name String
-  municipalityId String @db.ObjectId
-  municipality Municipality @relation(fields: [municipalityId], references: [id])
+  city           String
+  municipalityId String       @db.ObjectId
+  municipality   Municipality @relation(fields: [municipalityId], references: [id])
 
-  reatedAt DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
   status    Boolean  @default(true)
 
-  Branch Branch[]  
+  Branch Branch[]
 }
 
-model Branch{
+model Branch {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  name String
-  address String
+  name            String
+  address         String
+  locationUrl     String?
+  vehicleCapacity Int
+  trucksCapacity  Int
+
   cityId String @db.ObjectId
-  city City @relation(fields: [cityId], references: [id])
+  city   City   @relation(fields: [cityId], references: [id])
 
-  reatedAt DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
-  status    Boolean  @default(true)  
-}
+  status    Boolean  @default(true)
 
+  vehicles Vehicle[]
+}

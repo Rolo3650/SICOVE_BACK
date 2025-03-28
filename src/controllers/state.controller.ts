@@ -19,63 +19,63 @@ import {
     type GeneralIdParams,
     GeneralIdParamsSchema,
 } from "src/schemas/general.schema";
-import {
-    type CreateModel,
-    CreateModelSchema,
-    type UpdateModel,
-    UpdateModelSchema,
-} from "src/schemas/model/body.schema";
 import { SuccessResponse } from "src/schemas/response.schema";
-import { ModelService } from "src/services/model.service";
+import {
+    type CreateState,
+    CreateStateSchema,
+    type UpdateState,
+    UpdateStateSchema,
+} from "src/schemas/state/body.schema";
+import { StateService } from "src/services/state.service";
 import {
     transformZodSchemaToBodySchema,
     transformZodSchemaToParamSchema,
 } from "src/utils/zodToOpenApi";
 
-@Controller("/model")
+@Controller("/state")
 @applyDecorators(ApiBearerAuth())
-export class ModelController {
-    private readonly modelService: ModelService;
+export class StateController {
+    private readonly stateService: StateService;
     private readonly jwtService: JwtService;
 
-    constructor(modelService: ModelService, jwtService: JwtService) {
-        this.modelService = modelService;
+    constructor(stateService: StateService, jwtService: JwtService) {
+        this.stateService = stateService;
         this.jwtService = jwtService;
     }
 
     @Get()
-    async getModels(@Res() res: Response): Promise<Response> {
-        const models = await this.modelService.getModels({
+    async getStates(@Res() res: Response): Promise<Response> {
+        const states = await this.stateService.getStates({
             include: {
-                brand: true,
+                country: true,
             },
         });
         const response: SuccessResponse = {
-            message: "Models found",
+            message: "States found",
             statusCode: HttpStatus.OK,
             data: {
-                models,
+                states,
             },
         };
         return res.status(response.statusCode).json(response);
     }
 
     @Post()
-    @ApiBody(transformZodSchemaToBodySchema(CreateModelSchema))
+    @ApiBody(transformZodSchemaToBodySchema(CreateStateSchema))
     @UsePipes(
         new ValidationPipe({
-            bodySchema: CreateModelSchema,
+            bodySchema: CreateStateSchema,
         }),
     )
-    async createModel(
+    async createState(
         @Res() res: Response,
-        @Body() body: CreateModel,
+        @Body() body: CreateState,
     ): Promise<Response> {
-        const model = await this.modelService.createModel(body);
+        const state = await this.stateService.createState(body);
         const response: SuccessResponse = {
-            message: "Model created",
+            message: "State created",
             statusCode: HttpStatus.CREATED,
-            data: { model },
+            data: { state },
         };
         return res.status(response.statusCode).json(response);
     }
@@ -87,42 +87,42 @@ export class ModelController {
             paramsSchema: GeneralIdParamsSchema,
         }),
     )
-    async getModelById(
+    async getStateById(
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        const model = await this.modelService.getModel(params.id, {
+        const state = await this.stateService.getState(params.id, {
             include: {
-                brand: true,
+                country: true,
             },
         });
         const response: SuccessResponse = {
-            message: "Model found",
+            message: "State found",
             statusCode: HttpStatus.OK,
-            data: { model },
+            data: { state },
         };
         return res.status(response.statusCode).json(response);
     }
 
     @Put("byId/:id")
     @ApiParam(transformZodSchemaToParamSchema(GeneralIdParamsSchema, 0))
-    @ApiBody(transformZodSchemaToBodySchema(UpdateModelSchema))
+    @ApiBody(transformZodSchemaToBodySchema(UpdateStateSchema))
     @UsePipes(
         new ValidationPipe({
             paramsSchema: GeneralIdParamsSchema,
-            bodySchema: UpdateModelSchema,
+            bodySchema: UpdateStateSchema,
         }),
     )
-    async updateModelById(
+    async updateStateById(
         @Res() res: Response,
         @Param() params: GeneralIdParams,
-        @Body() body: UpdateModel,
+        @Body() body: UpdateState,
     ): Promise<Response> {
-        const model = await this.modelService.updateModel(body, params.id);
+        const state = await this.stateService.updateState(body, params.id);
         const response: SuccessResponse = {
-            message: "Model updated",
+            message: "State updated",
             statusCode: HttpStatus.OK,
-            data: { model },
+            data: { state },
         };
         return res.status(response.statusCode).json(response);
     }
@@ -138,9 +138,9 @@ export class ModelController {
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        await this.modelService.deleteModel(params.id);
+        await this.stateService.deleteState(params.id);
         const response: SuccessResponse = {
-            message: "Model deleted",
+            message: "State deleted",
             statusCode: HttpStatus.OK,
             data: {},
         };

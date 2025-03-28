@@ -45,7 +45,15 @@ export class VehicleController {
 
     @Get()
     async getVehicles(@Res() res: Response): Promise<Response> {
-        const vehicles = await this.vehicleService.getVehicles();
+        const vehicles = await this.vehicleService.getVehicles({
+            include: {
+                version: {
+                    include: {
+                        model: true,
+                    },
+                },
+            },
+        });
         const response: SuccessResponse = {
             message: "Vehicles found",
             statusCode: HttpStatus.OK,
@@ -87,7 +95,19 @@ export class VehicleController {
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        const vehicle = await this.vehicleService.getVehicle(params.id);
+        const vehicle = await this.vehicleService.getVehicle(params.id, {
+            include: {
+                version: {
+                    include: {
+                        model: {
+                            include: {
+                                brand: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
         const response: SuccessResponse = {
             message: "Vehicle found",
             statusCode: HttpStatus.OK,

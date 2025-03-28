@@ -16,66 +16,70 @@ import { ApiBearerAuth, ApiBody, ApiParam } from "@nestjs/swagger";
 import { type Response } from "express";
 import { ValidationPipe } from "src/pipes/validation.pipe";
 import {
+    type CreateCity,
+    CreateCitySchema,
+    type UpdateCity,
+    UpdateCitySchema,
+} from "src/schemas/city/body.schema";
+import {
     type GeneralIdParams,
     GeneralIdParamsSchema,
 } from "src/schemas/general.schema";
-import {
-    type CreateModel,
-    CreateModelSchema,
-    type UpdateModel,
-    UpdateModelSchema,
-} from "src/schemas/model/body.schema";
 import { SuccessResponse } from "src/schemas/response.schema";
-import { ModelService } from "src/services/model.service";
+import { CityService } from "src/services/city.service";
 import {
     transformZodSchemaToBodySchema,
     transformZodSchemaToParamSchema,
 } from "src/utils/zodToOpenApi";
 
-@Controller("/model")
+@Controller("/city")
 @applyDecorators(ApiBearerAuth())
-export class ModelController {
-    private readonly modelService: ModelService;
+export class CityController {
+    private readonly cityService: CityService;
     private readonly jwtService: JwtService;
 
-    constructor(modelService: ModelService, jwtService: JwtService) {
-        this.modelService = modelService;
+    constructor(cityService: CityService, jwtService: JwtService) {
+        this.cityService = cityService;
         this.jwtService = jwtService;
     }
 
     @Get()
-    async getModels(@Res() res: Response): Promise<Response> {
-        const models = await this.modelService.getModels({
+    async getCities(@Res() res: Response): Promise<Response> {
+        const cities = await this.cityService.getCities({
             include: {
-                brand: true,
+                municipality: {
+                    include: {
+                        state: true,
+                    },
+                },
             },
         });
         const response: SuccessResponse = {
-            message: "Models found",
+            message: "Cities found",
             statusCode: HttpStatus.OK,
             data: {
-                models,
+                cities,
             },
         };
         return res.status(response.statusCode).json(response);
     }
 
     @Post()
-    @ApiBody(transformZodSchemaToBodySchema(CreateModelSchema))
+    @ApiBody(transformZodSchemaToBodySchema(CreateCitySchema))
     @UsePipes(
         new ValidationPipe({
-            bodySchema: CreateModelSchema,
+            bodySchema: CreateCitySchema,
         }),
     )
-    async createModel(
+    async createCity(
         @Res() res: Response,
-        @Body() body: CreateModel,
+        @Body() body: CreateCity,
     ): Promise<Response> {
-        const model = await this.modelService.createModel(body);
+        const city = await this.cityService.createCity(body);
         const response: SuccessResponse = {
-            message: "Model created",
+            message: "City created",
             statusCode: HttpStatus.CREATED,
-            data: { model },
+            data: { city },
         };
         return res.status(response.statusCode).json(response);
     }
@@ -87,42 +91,48 @@ export class ModelController {
             paramsSchema: GeneralIdParamsSchema,
         }),
     )
-    async getModelById(
+    async getCityById(
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        const model = await this.modelService.getModel(params.id, {
+        const city = await this.cityService.getCity(params.id, {
             include: {
-                brand: true,
+                municipality: {
+                    include: {
+                        state: {
+                            include: { country: true },
+                        },
+                    },
+                },
             },
         });
         const response: SuccessResponse = {
-            message: "Model found",
+            message: "City found",
             statusCode: HttpStatus.OK,
-            data: { model },
+            data: { city },
         };
         return res.status(response.statusCode).json(response);
     }
 
     @Put("byId/:id")
     @ApiParam(transformZodSchemaToParamSchema(GeneralIdParamsSchema, 0))
-    @ApiBody(transformZodSchemaToBodySchema(UpdateModelSchema))
+    @ApiBody(transformZodSchemaToBodySchema(UpdateCitySchema))
     @UsePipes(
         new ValidationPipe({
             paramsSchema: GeneralIdParamsSchema,
-            bodySchema: UpdateModelSchema,
+            bodySchema: UpdateCitySchema,
         }),
     )
-    async updateModelById(
+    async updateCityById(
         @Res() res: Response,
         @Param() params: GeneralIdParams,
-        @Body() body: UpdateModel,
+        @Body() body: UpdateCity,
     ): Promise<Response> {
-        const model = await this.modelService.updateModel(body, params.id);
+        const city = await this.cityService.updateCity(body, params.id);
         const response: SuccessResponse = {
-            message: "Model updated",
+            message: "City updated",
             statusCode: HttpStatus.OK,
-            data: { model },
+            data: { city },
         };
         return res.status(response.statusCode).json(response);
     }
@@ -138,9 +148,9 @@ export class ModelController {
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        await this.modelService.deleteModel(params.id);
+        await this.cityService.deleteCity(params.id);
         const response: SuccessResponse = {
-            message: "Model deleted",
+            message: "City deleted",
             statusCode: HttpStatus.OK,
             data: {},
         };

@@ -20,62 +20,70 @@ import {
     GeneralIdParamsSchema,
 } from "src/schemas/general.schema";
 import {
-    type CreateModel,
-    CreateModelSchema,
-    type UpdateModel,
-    UpdateModelSchema,
-} from "src/schemas/model/body.schema";
+    type CreateMunicipality,
+    CreateMunicipalitySchema,
+    type UpdateMunicipality,
+    UpdateMunicipalitySchema,
+} from "src/schemas/municipality/body.schema";
 import { SuccessResponse } from "src/schemas/response.schema";
-import { ModelService } from "src/services/model.service";
+import { MunicipalityService } from "src/services/municipality.service";
 import {
     transformZodSchemaToBodySchema,
     transformZodSchemaToParamSchema,
 } from "src/utils/zodToOpenApi";
 
-@Controller("/model")
+@Controller("/municipality")
 @applyDecorators(ApiBearerAuth())
-export class ModelController {
-    private readonly modelService: ModelService;
+export class MunicipalityController {
+    private readonly municipalityService: MunicipalityService;
     private readonly jwtService: JwtService;
 
-    constructor(modelService: ModelService, jwtService: JwtService) {
-        this.modelService = modelService;
+    constructor(
+        municipalityService: MunicipalityService,
+        jwtService: JwtService,
+    ) {
+        this.municipalityService = municipalityService;
         this.jwtService = jwtService;
     }
 
     @Get()
-    async getModels(@Res() res: Response): Promise<Response> {
-        const models = await this.modelService.getModels({
-            include: {
-                brand: true,
+    async getMunicipalities(@Res() res: Response): Promise<Response> {
+        const municipalities = await this.municipalityService.getMunicipalities(
+            {
+                include: {
+                    state: {
+                        include: { country: true },
+                    },
+                },
             },
-        });
+        );
         const response: SuccessResponse = {
-            message: "Models found",
+            message: "Municipalities found",
             statusCode: HttpStatus.OK,
             data: {
-                models,
+                municipalities,
             },
         };
         return res.status(response.statusCode).json(response);
     }
 
     @Post()
-    @ApiBody(transformZodSchemaToBodySchema(CreateModelSchema))
+    @ApiBody(transformZodSchemaToBodySchema(CreateMunicipalitySchema))
     @UsePipes(
         new ValidationPipe({
-            bodySchema: CreateModelSchema,
+            bodySchema: CreateMunicipalitySchema,
         }),
     )
-    async createModel(
+    async createMunicipality(
         @Res() res: Response,
-        @Body() body: CreateModel,
+        @Body() body: CreateMunicipality,
     ): Promise<Response> {
-        const model = await this.modelService.createModel(body);
+        const municipality =
+            await this.municipalityService.createMunicipality(body);
         const response: SuccessResponse = {
-            message: "Model created",
+            message: "Municipality created",
             statusCode: HttpStatus.CREATED,
-            data: { model },
+            data: { municipality },
         };
         return res.status(response.statusCode).json(response);
     }
@@ -87,42 +95,50 @@ export class ModelController {
             paramsSchema: GeneralIdParamsSchema,
         }),
     )
-    async getModelById(
+    async getMunicipalityById(
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        const model = await this.modelService.getModel(params.id, {
-            include: {
-                brand: true,
+        const municipality = await this.municipalityService.getMunicipality(
+            params.id,
+            {
+                include: {
+                    state: {
+                        include: { country: true },
+                    },
+                },
             },
-        });
+        );
         const response: SuccessResponse = {
-            message: "Model found",
+            message: "Municipality found",
             statusCode: HttpStatus.OK,
-            data: { model },
+            data: { municipality },
         };
         return res.status(response.statusCode).json(response);
     }
 
     @Put("byId/:id")
     @ApiParam(transformZodSchemaToParamSchema(GeneralIdParamsSchema, 0))
-    @ApiBody(transformZodSchemaToBodySchema(UpdateModelSchema))
+    @ApiBody(transformZodSchemaToBodySchema(UpdateMunicipalitySchema))
     @UsePipes(
         new ValidationPipe({
             paramsSchema: GeneralIdParamsSchema,
-            bodySchema: UpdateModelSchema,
+            bodySchema: UpdateMunicipalitySchema,
         }),
     )
-    async updateModelById(
+    async updateMunicipalityById(
         @Res() res: Response,
         @Param() params: GeneralIdParams,
-        @Body() body: UpdateModel,
+        @Body() body: UpdateMunicipality,
     ): Promise<Response> {
-        const model = await this.modelService.updateModel(body, params.id);
+        const municipality = await this.municipalityService.updateMunicipality(
+            body,
+            params.id,
+        );
         const response: SuccessResponse = {
-            message: "Model updated",
+            message: "Municipality updated",
             statusCode: HttpStatus.OK,
-            data: { model },
+            data: { municipality },
         };
         return res.status(response.statusCode).json(response);
     }
@@ -138,9 +154,9 @@ export class ModelController {
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        await this.modelService.deleteModel(params.id);
+        await this.municipalityService.deleteMunicipality(params.id);
         const response: SuccessResponse = {
-            message: "Model deleted",
+            message: "Municipality deleted",
             statusCode: HttpStatus.OK,
             data: {},
         };

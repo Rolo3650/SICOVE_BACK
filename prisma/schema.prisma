@@ -118,7 +118,83 @@ model Vehicle {
   versionId String  @db.ObjectId
   version   Version @relation(fields: [versionId], references: [id])
 
+  branchId String?  @db.ObjectId
+  branch   Branch? @relation(fields: [branchId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
   status    Boolean  @default(true)
+}
+
+model Country {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  country String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  status    Boolean  @default(true)
+
+  State State[]
+}
+
+model State {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  state     String
+  countryId String  @db.ObjectId
+  country   Country @relation(fields: [countryId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  status    Boolean  @default(true)
+
+  Municipality Municipality[]
+}
+
+model Municipality {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  municipality String
+  stateId      String @db.ObjectId
+  state        State  @relation(fields: [stateId], references: [id])
+
+  City City[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  status    Boolean  @default(true)
+}
+
+model City {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  city           String
+  municipalityId String       @db.ObjectId
+  municipality   Municipality @relation(fields: [municipalityId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  status    Boolean  @default(true)
+
+  Branch Branch[]
+}
+
+model Branch {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name            String
+  address         String
+  locationUrl     String?
+  vehicleCapacity Int
+  trucksCapacity  Int
+
+  cityId String @db.ObjectId
+  city   City   @relation(fields: [cityId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  status    Boolean  @default(true)
+
+  vehicles Vehicle[]
 }

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { Vehicle } from "@prisma/client";
+import { Prisma, Vehicle } from "@prisma/client";
 import { db } from "src/database/connection.database";
 import type {
     CreateVehicle,
@@ -15,21 +15,30 @@ export class VehicleService {
         this.configService = configService;
     }
 
-    async getVehicles(): Promise<Vehicle[]> {
+    async getVehicles(props?: {
+        include?: Prisma.VehicleInclude;
+    }): Promise<Vehicle[]> {
         const vehicles = await db.vehicle.findMany({
             where: {
                 status: true,
             },
+            include: props?.include,
         });
         return vehicles;
     }
 
-    async getVehicle(id: string): Promise<Vehicle> {
+    async getVehicle(
+        id: string,
+        props?: {
+            include?: Prisma.VehicleInclude;
+        },
+    ): Promise<Vehicle> {
         const vehicle = await db.vehicle.findUnique({
             where: {
                 id,
                 status: true,
             },
+            include: props?.include,
         });
         if (!vehicle) {
             throw new NotFoundException("Vehicle not found");

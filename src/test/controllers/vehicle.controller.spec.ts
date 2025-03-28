@@ -1,4 +1,4 @@
-import { Brand, Model, Vehicle, Version } from "@prisma/client";
+import { Brand, Model, Prisma, Vehicle, Version } from "@prisma/client";
 import { Response } from "express";
 import { VehicleController } from "src/controllers/vehicle.controller";
 import { db } from "src/database/connection.database";
@@ -118,7 +118,14 @@ describe("VehicleController", () => {
                 expect(data.vehicle).toMatchObject(vehicle);
             }
 
-            vehicle = data.vehicle as Vehicle;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { version, ...vehicleDto } =
+                data.vehicle as Prisma.VehicleGetPayload<{
+                    include: {
+                        version: true;
+                    };
+                }>;
+            vehicle = vehicleDto as Vehicle;
         });
     });
 

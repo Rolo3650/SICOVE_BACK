@@ -16,36 +16,36 @@ import { ApiBearerAuth, ApiBody, ApiParam } from "@nestjs/swagger";
 import { type Response } from "express";
 import { ValidationPipe } from "src/pipes/validation.pipe";
 import {
-    type CreateCity,
-    CreateCitySchema,
-    type UpdateCity,
-    UpdateCitySchema,
-} from "src/schemas/city/body.schema";
+    type CreateColony,
+    CreateColonySchema,
+    type UpdateColony,
+    UpdateColonySchema,
+} from "src/schemas/colony/body.schema";
 import {
     type GeneralIdParams,
     GeneralIdParamsSchema,
 } from "src/schemas/general.schema";
 import { SuccessResponse } from "src/schemas/response.schema";
-import { CityService } from "src/services/city.service";
+import { ColonyService } from "src/services/colony.service";
 import {
     transformZodSchemaToBodySchema,
     transformZodSchemaToParamSchema,
 } from "src/utils/zodToOpenApi";
 
-@Controller("/city")
+@Controller("/colony")
 @applyDecorators(ApiBearerAuth())
-export class CityController {
-    private readonly cityService: CityService;
+export class ColonyController {
+    private readonly colonyService: ColonyService;
     private readonly jwtService: JwtService;
 
-    constructor(cityService: CityService, jwtService: JwtService) {
-        this.cityService = cityService;
+    constructor(colonyService: ColonyService, jwtService: JwtService) {
+        this.colonyService = colonyService;
         this.jwtService = jwtService;
     }
 
     @Get()
     async getCities(@Res() res: Response): Promise<Response> {
-        const cities = await this.cityService.getCities({
+        const colonies = await this.colonyService.getColonies({
             include: {
                 municipality: {
                     include: {
@@ -58,28 +58,28 @@ export class CityController {
             message: "Cities found",
             statusCode: HttpStatus.OK,
             data: {
-                cities,
+                colonies,
             },
         };
         return res.status(response.statusCode).json(response);
     }
 
     @Post()
-    @ApiBody(transformZodSchemaToBodySchema(CreateCitySchema))
+    @ApiBody(transformZodSchemaToBodySchema(CreateColonySchema))
     @UsePipes(
         new ValidationPipe({
-            bodySchema: CreateCitySchema,
+            bodySchema: CreateColonySchema,
         }),
     )
-    async createCity(
+    async createColony(
         @Res() res: Response,
-        @Body() body: CreateCity,
+        @Body() body: CreateColony,
     ): Promise<Response> {
-        const city = await this.cityService.createCity(body);
+        const colony = await this.colonyService.createColony(body);
         const response: SuccessResponse = {
-            message: "City created",
+            message: "Colony created",
             statusCode: HttpStatus.CREATED,
-            data: { city },
+            data: { colony },
         };
         return res.status(response.statusCode).json(response);
     }
@@ -91,11 +91,11 @@ export class CityController {
             paramsSchema: GeneralIdParamsSchema,
         }),
     )
-    async getCityById(
+    async getColonyById(
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        const city = await this.cityService.getCity(params.id, {
+        const colony = await this.colonyService.getColony(params.id, {
             include: {
                 municipality: {
                     include: {
@@ -107,32 +107,32 @@ export class CityController {
             },
         });
         const response: SuccessResponse = {
-            message: "City found",
+            message: "Colony found",
             statusCode: HttpStatus.OK,
-            data: { city },
+            data: { colony },
         };
         return res.status(response.statusCode).json(response);
     }
 
     @Put("byId/:id")
     @ApiParam(transformZodSchemaToParamSchema(GeneralIdParamsSchema, 0))
-    @ApiBody(transformZodSchemaToBodySchema(UpdateCitySchema))
+    @ApiBody(transformZodSchemaToBodySchema(UpdateColonySchema))
     @UsePipes(
         new ValidationPipe({
             paramsSchema: GeneralIdParamsSchema,
-            bodySchema: UpdateCitySchema,
+            bodySchema: UpdateColonySchema,
         }),
     )
-    async updateCityById(
+    async updateColonyById(
         @Res() res: Response,
         @Param() params: GeneralIdParams,
-        @Body() body: UpdateCity,
+        @Body() body: UpdateColony,
     ): Promise<Response> {
-        const city = await this.cityService.updateCity(body, params.id);
+        const colony = await this.colonyService.updateColony(body, params.id);
         const response: SuccessResponse = {
-            message: "City updated",
+            message: "Colony updated",
             statusCode: HttpStatus.OK,
-            data: { city },
+            data: { colony },
         };
         return res.status(response.statusCode).json(response);
     }
@@ -148,9 +148,9 @@ export class CityController {
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        await this.cityService.deleteCity(params.id);
+        await this.colonyService.deleteColony(params.id);
         const response: SuccessResponse = {
-            message: "City deleted",
+            message: "Colony deleted",
             statusCode: HttpStatus.OK,
             data: {},
         };

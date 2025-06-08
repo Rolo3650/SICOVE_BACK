@@ -1,4 +1,10 @@
-import { Vehicle } from "@prisma/client";
+import {
+    OwnerType,
+    Vehicle,
+    VehicleStatus,
+    VerificiationColor,
+} from "@prisma/client";
+import { getEnumPrismaValues } from "src/utils/enum";
 import { z } from "zod";
 import { NullableToOptional, zObjectId } from "../general.schema";
 
@@ -7,13 +13,30 @@ type SafeVehicle = NullableToOptional<
 >;
 
 const CreateVehicleSchema = z.object({
+    // biome-ignore lint/style/useNamingConvention: acronym
+    VIN: z.string().nullable().optional(),
     color: z.string(),
     mileage: z.number(),
     engineNumber: z.string(),
     chasisNumber: z.string(),
+    vehicleStatus: z.enum(getEnumPrismaValues(VehicleStatus)),
+    size: z.number().int(),
+
+    // Verification information
+    registered: z.boolean(),
+    circulationCard: z.string().nullable().optional(),
+    circulationEndDate: z.coerce.date().nullable().optional(),
     licencePlate: z.string().nullable().optional(),
-    // biome-ignore lint/style/useNamingConvention: <explanation>
-    VIN: z.string().nullable().optional(),
+    verificationNumber: z.number().int().nullable().optional(),
+    verificationColor: z.enum(getEnumPrismaValues(VerificiationColor)),
+
+    // Owner information
+    ownerName: z.string().nullable().optional(),
+    ownerType: z.enum(getEnumPrismaValues(OwnerType)).optional().nullable(),
+    ownerPhone: z.string().nullable().optional(),
+    observation: z.string().nullable().optional(),
+
+    // Relations
     versionId: zObjectId(),
 }) satisfies z.ZodType<SafeVehicle>;
 

@@ -101,11 +101,19 @@ export class VehicleController {
                     include: {
                         model: {
                             include: {
-                                brand: true,
+                                subBrand: {
+                                    include: {
+                                        brand: true,
+                                    },
+                                },
                             },
                         },
                     },
                 },
+                customRegistration: true,
+                branchRegistration: true,
+                insuranceRegistration: true,
+                verification: true,
             },
         });
         const response: SuccessResponse = {

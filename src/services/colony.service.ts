@@ -1,19 +1,21 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { City, Prisma } from "@prisma/client";
+import { Colony, Prisma } from "@prisma/client";
 import { db } from "src/database/connection.database";
-import type { CreateCity, UpdateCity } from "src/schemas/city/body.schema";
+import { CreateColony, UpdateColony } from "src/schemas/colony/body.schema";
 
 @Injectable()
-export class CityService {
+export class ColonyService {
     private configService: ConfigService;
 
     constructor(configService: ConfigService) {
         this.configService = configService;
     }
 
-    async getCities(props?: { include?: Prisma.CityInclude }): Promise<City[]> {
-        const municipalities = await db.city.findMany({
+    async getColonies(props?: {
+        include?: Prisma.ColonyInclude;
+    }): Promise<Colony[]> {
+        const municipalities = await db.colony.findMany({
             where: {
                 status: true,
             },
@@ -22,29 +24,29 @@ export class CityService {
         return municipalities;
     }
 
-    async getCity(
+    async getColony(
         id: string,
         props?: {
-            include?: Prisma.CityInclude;
+            include?: Prisma.ColonyInclude;
         },
-    ): Promise<City> {
-        const city = await db.city.findUnique({
+    ): Promise<Colony> {
+        const colony = await db.colony.findUnique({
             where: {
                 id,
                 status: true,
             },
             include: props?.include,
         });
-        if (!city) {
-            throw new NotFoundException("City not found");
+        if (!colony) {
+            throw new NotFoundException("Colony not found");
         }
-        return city;
+        return colony;
     }
 
-    async createCity(cityDto: CreateCity): Promise<City> {
+    async createColony(colonyDto: CreateColony): Promise<Colony> {
         const municipality = await db.municipality.findUnique({
             where: {
-                id: cityDto.municipalityId,
+                id: colonyDto.municipalityId,
                 status: true,
             },
         });
@@ -52,17 +54,17 @@ export class CityService {
             throw new NotFoundException("Municipality not found");
         }
 
-        const city = await db.city.create({
-            data: cityDto,
+        const colony = await db.colony.create({
+            data: colonyDto,
         });
-        return city;
+        return colony;
     }
 
-    async updateCity(cityDto: UpdateCity, id: string): Promise<City> {
-        if (cityDto.municipalityId) {
+    async updateColony(colonyDto: UpdateColony, id: string): Promise<Colony> {
+        if (colonyDto.municipalityId) {
             const municipality = await db.municipality.findUnique({
                 where: {
-                    id: cityDto.municipalityId,
+                    id: colonyDto.municipalityId,
                     status: true,
                 },
             });
@@ -71,41 +73,41 @@ export class CityService {
             }
         }
 
-        const city = await db.city.findUnique({
+        const colony = await db.colony.findUnique({
             where: {
                 id,
                 status: true,
             },
         });
 
-        if (!city) {
-            throw new NotFoundException("City not found");
+        if (!colony) {
+            throw new NotFoundException("Colony not found");
         }
 
-        const updatedCity = await db.city.update({
-            data: cityDto,
+        const updatedColony = await db.colony.update({
+            data: colonyDto,
             where: {
                 id,
             },
         });
 
-        return updatedCity;
+        return updatedColony;
     }
 
-    async deleteCity(id: string): Promise<void> {
-        const city = await db.city.findUnique({
+    async deleteColony(id: string): Promise<void> {
+        const colony = await db.colony.findUnique({
             where: {
                 id,
                 status: true,
             },
         });
 
-        if (!city) {
-            throw new NotFoundException("City not found");
+        if (!colony) {
+            throw new NotFoundException("Colony not found");
         }
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const _deletedCity = await db.city.update({
+        const _deletedColony = await db.colony.update({
             data: {
                 status: false,
             },

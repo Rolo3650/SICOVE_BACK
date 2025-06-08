@@ -16,74 +16,66 @@ import { ApiBearerAuth, ApiBody, ApiParam } from "@nestjs/swagger";
 import { type Response } from "express";
 import { ValidationPipe } from "src/pipes/validation.pipe";
 import {
-    type CreateBranch,
-    CreateBranchSchema,
-    type UpdateBranch,
-    UpdateBranchSchema,
-} from "src/schemas/branch/body.schema";
-import {
     type GeneralIdParams,
     GeneralIdParamsSchema,
 } from "src/schemas/general.schema";
 import { SuccessResponse } from "src/schemas/response.schema";
-import { BranchService } from "src/services/branch.service";
+import {
+    type CreateSubBrand,
+    CreateSubBrandSchema,
+    type UpdateSubBrand,
+    UpdateSubBrandSchema,
+} from "src/schemas/subBrand/body.schema";
+import { SubBrandService } from "src/services/subBrand.service";
 import {
     transformZodSchemaToBodySchema,
     transformZodSchemaToParamSchema,
 } from "src/utils/zodToOpenApi";
 
-@Controller("/branch")
+@Controller("/subBrand")
 @applyDecorators(ApiBearerAuth())
-export class BranchController {
-    private readonly branchService: BranchService;
+export class SubBrandController {
+    private readonly subBrandService: SubBrandService;
     private readonly jwtService: JwtService;
 
-    constructor(branchService: BranchService, jwtService: JwtService) {
-        this.branchService = branchService;
+    constructor(subBrandService: SubBrandService, jwtService: JwtService) {
+        this.subBrandService = subBrandService;
         this.jwtService = jwtService;
     }
 
     @Get()
-    async getBranches(@Res() res: Response): Promise<Response> {
-        const branches = await this.branchService.getBranches({
+    async getSubBrands(@Res() res: Response): Promise<Response> {
+        const subBrands = await this.subBrandService.getSubBrands({
             include: {
-                colony: {
-                    include: {
-                        municipality: {
-                            include: {
-                                state: true,
-                            },
-                        },
-                    },
-                },
+                brand: true,
             },
         });
         const response: SuccessResponse = {
-            message: "Branches found",
+            message: "SubBrands found",
             statusCode: HttpStatus.OK,
             data: {
-                branches,
+                subBrands,
             },
         };
         return res.status(response.statusCode).json(response);
     }
 
     @Post()
-    @ApiBody(transformZodSchemaToBodySchema(CreateBranchSchema))
+    @ApiBody(transformZodSchemaToBodySchema(CreateSubBrandSchema))
     @UsePipes(
         new ValidationPipe({
-            bodySchema: CreateBranchSchema,
+            bodySchema: CreateSubBrandSchema,
         }),
     )
-    async createBranch(
+    async createSubBrand(
         @Res() res: Response,
-        @Body() body: CreateBranch,
+        @Body() body: CreateSubBrand,
     ): Promise<Response> {
-        const branch = await this.branchService.createBranch(body);
+        const subBrand = await this.subBrandService.createSubBrand(body);
         const response: SuccessResponse = {
-            message: "Branch created",
+            message: "SubBrand created",
             statusCode: HttpStatus.CREATED,
-            data: { branch },
+            data: { subBrand },
         };
         return res.status(response.statusCode).json(response);
     }
@@ -95,65 +87,45 @@ export class BranchController {
             paramsSchema: GeneralIdParamsSchema,
         }),
     )
-    async getBranchById(
+    async getSubBrandById(
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        const branch = await this.branchService.getBranch(params.id, {
+        const subBrand = await this.subBrandService.getSubBrand(params.id, {
             include: {
-                colony: {
-                    include: {
-                        municipality: {
-                            include: {
-                                state: {
-                                    include: { country: true },
-                                },
-                            },
-                        },
-                    },
-                },
-                branchSection: {
-                    include: {
-                        vehicle: {
-                            include: {
-                                version: {
-                                    include: {
-                                        model: true,
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
+                brand: true,
             },
         });
         const response: SuccessResponse = {
-            message: "Branch found",
+            message: "SubBrand found",
             statusCode: HttpStatus.OK,
-            data: { branch },
+            data: { subBrand },
         };
         return res.status(response.statusCode).json(response);
     }
 
     @Put("byId/:id")
     @ApiParam(transformZodSchemaToParamSchema(GeneralIdParamsSchema, 0))
-    @ApiBody(transformZodSchemaToBodySchema(UpdateBranchSchema))
+    @ApiBody(transformZodSchemaToBodySchema(UpdateSubBrandSchema))
     @UsePipes(
         new ValidationPipe({
             paramsSchema: GeneralIdParamsSchema,
-            bodySchema: UpdateBranchSchema,
+            bodySchema: UpdateSubBrandSchema,
         }),
     )
-    async updateBranchById(
+    async updateSubBrandById(
         @Res() res: Response,
         @Param() params: GeneralIdParams,
-        @Body() body: UpdateBranch,
+        @Body() body: UpdateSubBrand,
     ): Promise<Response> {
-        const branch = await this.branchService.updateBranch(body, params.id);
+        const subBrand = await this.subBrandService.updateSubBrand(
+            body,
+            params.id,
+        );
         const response: SuccessResponse = {
-            message: "Branch updated",
+            message: "SubBrand updated",
             statusCode: HttpStatus.OK,
-            data: { branch },
+            data: { subBrand },
         };
         return res.status(response.statusCode).json(response);
     }
@@ -169,9 +141,9 @@ export class BranchController {
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        await this.branchService.deleteBranch(params.id);
+        await this.subBrandService.deleteSubBrand(params.id);
         const response: SuccessResponse = {
-            message: "Branch deleted",
+            message: "SubBrand deleted",
             statusCode: HttpStatus.OK,
             data: {},
         };

@@ -18,6 +18,8 @@ const CreateVersionSchema = z.object({
     fuelType: z.enum(getEnumPrismaValues(FuelType)),
     transmissionType: z.enum(getEnumPrismaValues(TransmissionType)),
     engineSize: z.number(),
+    doors: z.number().int(),
+    axis: z.number().int(),
     description: z.string().nullable().optional(),
     modelId: zObjectId(),
     year: z.coerce.date(),

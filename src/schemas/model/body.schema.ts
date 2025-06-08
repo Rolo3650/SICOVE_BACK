@@ -9,7 +9,7 @@ type SafeModel = NullableToOptional<
 const CreateModelSchema = z.object({
     model: z.string(),
     description: z.string().nullable().optional(),
-    brandId: zObjectId(),
+    subBrandId: zObjectId(),
 }) satisfies z.ZodType<SafeModel>;
 
 const UpdateModelSchema = CreateModelSchema.partial();

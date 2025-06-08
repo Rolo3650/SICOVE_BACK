@@ -16,74 +16,73 @@ import { ApiBearerAuth, ApiBody, ApiParam } from "@nestjs/swagger";
 import { type Response } from "express";
 import { ValidationPipe } from "src/pipes/validation.pipe";
 import {
-    type CreateBranch,
-    CreateBranchSchema,
-    type UpdateBranch,
-    UpdateBranchSchema,
-} from "src/schemas/branch/body.schema";
-import {
     type GeneralIdParams,
     GeneralIdParamsSchema,
 } from "src/schemas/general.schema";
+import {
+    type CreateInsuranceRegistration,
+    CreateInsuranceRegistrationSchema,
+    type UpdateInsuranceRegistration,
+    UpdateInsuranceRegistrationSchema,
+} from "src/schemas/insuranceRegistration/body.schema";
 import { SuccessResponse } from "src/schemas/response.schema";
-import { BranchService } from "src/services/branch.service";
+import { InsuranceRegistrationService } from "src/services/insuranceRegistration.service";
 import {
     transformZodSchemaToBodySchema,
     transformZodSchemaToParamSchema,
 } from "src/utils/zodToOpenApi";
 
-@Controller("/branch")
+@Controller("/insurance-registration")
 @applyDecorators(ApiBearerAuth())
-export class BranchController {
-    private readonly branchService: BranchService;
+export class InsuranceRegistrationController {
+    private readonly insuranceRegistrationService: InsuranceRegistrationService;
     private readonly jwtService: JwtService;
 
-    constructor(branchService: BranchService, jwtService: JwtService) {
-        this.branchService = branchService;
+    constructor(
+        insuranceRegistrationService: InsuranceRegistrationService,
+        jwtService: JwtService,
+    ) {
+        this.insuranceRegistrationService = insuranceRegistrationService;
         this.jwtService = jwtService;
     }
 
     @Get()
-    async getBranches(@Res() res: Response): Promise<Response> {
-        const branches = await this.branchService.getBranches({
-            include: {
-                colony: {
-                    include: {
-                        municipality: {
-                            include: {
-                                state: true,
-                            },
-                        },
-                    },
+    async getInsuranceRegistrations(@Res() res: Response): Promise<Response> {
+        const insuranceRegistrations =
+            await this.insuranceRegistrationService.getInsuranceRegistrations({
+                include: {
+                    vehicle: true,
                 },
-            },
-        });
+            });
         const response: SuccessResponse = {
-            message: "Branches found",
+            message: "Custom registrations found",
             statusCode: HttpStatus.OK,
             data: {
-                branches,
+                insuranceRegistrations,
             },
         };
         return res.status(response.statusCode).json(response);
     }
 
     @Post()
-    @ApiBody(transformZodSchemaToBodySchema(CreateBranchSchema))
+    @ApiBody(transformZodSchemaToBodySchema(CreateInsuranceRegistrationSchema))
     @UsePipes(
         new ValidationPipe({
-            bodySchema: CreateBranchSchema,
+            bodySchema: CreateInsuranceRegistrationSchema,
         }),
     )
-    async createBranch(
+    async createInsuranceRegistration(
         @Res() res: Response,
-        @Body() body: CreateBranch,
+        @Body() body: CreateInsuranceRegistration,
     ): Promise<Response> {
-        const branch = await this.branchService.createBranch(body);
+        const insuranceRegistration =
+            await this.insuranceRegistrationService.createInsuranceRegistration(
+                body,
+            );
         const response: SuccessResponse = {
-            message: "Branch created",
+            message: "Custom registration created",
             statusCode: HttpStatus.CREATED,
-            data: { branch },
+            data: { insuranceRegistration },
         };
         return res.status(response.statusCode).json(response);
     }
@@ -95,65 +94,50 @@ export class BranchController {
             paramsSchema: GeneralIdParamsSchema,
         }),
     )
-    async getBranchById(
+    async getInsuranceRegistrationById(
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        const branch = await this.branchService.getBranch(params.id, {
-            include: {
-                colony: {
+        const insuranceRegistration =
+            await this.insuranceRegistrationService.getInsuranceRegistration(
+                params.id,
+                {
                     include: {
-                        municipality: {
-                            include: {
-                                state: {
-                                    include: { country: true },
-                                },
-                            },
-                        },
+                        vehicle: true,
                     },
                 },
-                branchSection: {
-                    include: {
-                        vehicle: {
-                            include: {
-                                version: {
-                                    include: {
-                                        model: true,
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        });
+            );
         const response: SuccessResponse = {
-            message: "Branch found",
+            message: "Custom registration found",
             statusCode: HttpStatus.OK,
-            data: { branch },
+            data: { insuranceRegistration },
         };
         return res.status(response.statusCode).json(response);
     }
 
     @Put("byId/:id")
     @ApiParam(transformZodSchemaToParamSchema(GeneralIdParamsSchema, 0))
-    @ApiBody(transformZodSchemaToBodySchema(UpdateBranchSchema))
+    @ApiBody(transformZodSchemaToBodySchema(UpdateInsuranceRegistrationSchema))
     @UsePipes(
         new ValidationPipe({
             paramsSchema: GeneralIdParamsSchema,
-            bodySchema: UpdateBranchSchema,
+            bodySchema: UpdateInsuranceRegistrationSchema,
         }),
     )
-    async updateBranchById(
+    async updateInsuranceRegistrationById(
         @Res() res: Response,
         @Param() params: GeneralIdParams,
-        @Body() body: UpdateBranch,
+        @Body() body: UpdateInsuranceRegistration,
     ): Promise<Response> {
-        const branch = await this.branchService.updateBranch(body, params.id);
+        const insuranceRegistration =
+            await this.insuranceRegistrationService.updateInsuranceRegistration(
+                body,
+                params.id,
+            );
         const response: SuccessResponse = {
-            message: "Branch updated",
+            message: "Custom registration updated",
             statusCode: HttpStatus.OK,
-            data: { branch },
+            data: { insuranceRegistration },
         };
         return res.status(response.statusCode).json(response);
     }
@@ -169,9 +153,11 @@ export class BranchController {
         @Res() res: Response,
         @Param() params: GeneralIdParams,
     ): Promise<Response> {
-        await this.branchService.deleteBranch(params.id);
+        await this.insuranceRegistrationService.deleteInsuranceRegistration(
+            params.id,
+        );
         const response: SuccessResponse = {
-            message: "Branch deleted",
+            message: "Custom registration deleted",
             statusCode: HttpStatus.OK,
             data: {},
         };

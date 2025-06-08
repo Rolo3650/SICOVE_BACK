@@ -47,7 +47,11 @@ export class ModelController {
     async getModels(@Res() res: Response): Promise<Response> {
         const models = await this.modelService.getModels({
             include: {
-                brand: true,
+                subBrand: {
+                    include: {
+                        brand: true,
+                    },
+                },
             },
         });
         const response: SuccessResponse = {
@@ -93,7 +97,11 @@ export class ModelController {
     ): Promise<Response> {
         const model = await this.modelService.getModel(params.id, {
             include: {
-                brand: true,
+                subBrand: {
+                    include: {
+                        brand: true,
+                    },
+                },
             },
         });
         const response: SuccessResponse = {

@@ -44,13 +44,13 @@ export class ModelService {
     }
 
     async createModel(modelDto: CreateModel): Promise<Model> {
-        const brand = await db.brand.findUnique({
+        const subBrand = await db.subBrand.findUnique({
             where: {
-                id: modelDto.brandId,
+                id: modelDto.subBrandId,
                 status: true,
             },
         });
-        if (!brand) {
+        if (!subBrand) {
             throw new NotFoundException("Brand not found");
         }
 
@@ -61,14 +61,14 @@ export class ModelService {
     }
 
     async updateModel(modelDto: UpdateModel, id: string): Promise<Model> {
-        if (modelDto.brandId) {
-            const brand = await db.brand.findUnique({
+        if (modelDto.subBrandId) {
+            const subBrand = await db.subBrand.findUnique({
                 where: {
-                    id: modelDto.brandId,
+                    id: modelDto.subBrandId,
                     status: true,
                 },
             });
-            if (!brand) {
+            if (!subBrand) {
                 throw new NotFoundException("Brand not found");
             }
         }

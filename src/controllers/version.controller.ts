@@ -95,7 +95,11 @@ export class VersionController {
             include: {
                 model: {
                     include: {
-                        brand: true,
+                        subBrand: {
+                            include: {
+                                brand: true,
+                            },
+                        },
                     },
                 },
             },

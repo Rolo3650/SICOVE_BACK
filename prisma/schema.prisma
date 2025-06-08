@@ -8,8 +8,6 @@ datasource db {
 }
 
 enum UserRole {
-  student
-  teacher
   admin
 }
 
@@ -34,8 +32,49 @@ enum FuelType {
 
 enum TransmissionType {
   Manual
-  Automatic
   CVT
+}
+
+enum VehicleStatus {
+  new
+  semiNew
+  internalUse
+}
+
+enum OwnerType {
+  natural
+  legal
+}
+
+enum VerificiationColor {
+  red
+  blue
+  green
+  yellow
+  pink
+}
+
+enum RoadEntity {
+  municipal
+  state
+  federal
+}
+
+enum RoadType {
+  dirtRoad
+  paved
+  pavimented
+}
+
+enum CirculationType {
+  public
+  private
+  shared
+}
+
+enum CheckType {
+  In
+  Out
 }
 
 model User {
@@ -47,12 +86,13 @@ model User {
   password   String
   phone      Int
   birthday   DateTime
-  role       UserRole   @default(student)
+  role       UserRole   @default(admin)
   userStatus UserStatus @default(pending)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt()
-  status    Boolean  @default(true)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt()
+  status             Boolean              @default(true)
+  branchRegistration BranchRegistration[]
 }
 
 model Brand {
@@ -65,7 +105,23 @@ model Brand {
   updatedAt DateTime @updatedAt()
   status    Boolean  @default(true)
 
-  Model Model[]
+  subBrand SubBrand[]
+}
+
+model SubBrand {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  subBrand    String
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  status    Boolean  @default(true)
+
+  brandId String @db.ObjectId
+  brand   Brand  @relation(fields: [brandId], references: [id])
+
+  model Model[]
 }
 
 model Model {
@@ -74,14 +130,14 @@ model Model {
   model       String
   description String?
 
-  brandId String @db.ObjectId
-  brand   Brand  @relation(fields: [brandId], references: [id])
+  subBrandId String   @db.ObjectId
+  subBrand   SubBrand @relation(fields: [subBrandId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
   status    Boolean  @default(true)
 
-  Version Version[]
+  version Version[]
 }
 
 model Version {
@@ -91,6 +147,8 @@ model Version {
   vehicleType      VehicleType
   fuelType         FuelType
   transmissionType TransmissionType
+  doors            Int
+  axis             Int
   description      String?
   engineSize       Float
   year             DateTime         @default(now())
@@ -102,28 +160,92 @@ model Version {
   updatedAt DateTime @updatedAt()
   status    Boolean  @default(true)
 
-  Vehicle Vehicle[]
+  vehicle Vehicle[]
 }
 
 model Vehicle {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  licencePlate String?
-  VIN          String?
-  color        String
-  mileage      Int
-  engineNumber String
-  chasisNumber String
+  VIN           String?
+  color         String
+  mileage       Int
+  engineNumber  String
+  chasisNumber  String
+  vehicleStatus VehicleStatus @default(new)
+  size          Int           @default(1)
+
+  registered          Boolean             @default(false)
+  circulationCard     String?
+  circulationEndDate  DateTime?
+  licencePlate        String?
+  verificiationNumber Int?
+  verificiationColor  VerificiationColor?
+
+  ownerName   String?
+  ownerType   OwnerType?
+  ownerPhone  String?
+  observation String?
 
   versionId String  @db.ObjectId
   version   Version @relation(fields: [versionId], references: [id])
 
-  branchId String?  @db.ObjectId
-  branch   Branch? @relation(fields: [branchId], references: [id])
+  branchSectionId String?        @db.ObjectId
+  branchSection   BranchSection? @relation(fields: [branchSectionId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
   status    Boolean  @default(true)
+
+  customRegistration    CustomRegistration[]
+  insuranceRegistration InsuranceRegistration[]
+  verification          Verification[]
+  branchRegistration    BranchRegistration[]
+}
+
+model CustomRegistration {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name  String
+  folio String
+  date  DateTime @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  status    Boolean  @default(true)
+
+  vehicleId String  @db.ObjectId
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id])
+}
+
+model InsuranceRegistration {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  policyNumber   String
+  company        String
+  startDate      DateTime
+  endDate        DateTime
+  policyHolder   String
+  policyCoverage String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  status    Boolean  @default(true)
+
+  vehicleId String  @db.ObjectId
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id])
+}
+
+model Verification {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  verificationDate DateTime @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  status    Boolean  @default(true)
+
+  vehicleId String  @db.ObjectId
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id])
 }
 
 model Country {
@@ -135,7 +257,7 @@ model Country {
   updatedAt DateTime @updatedAt()
   status    Boolean  @default(true)
 
-  State State[]
+  state State[]
 }
 
 model State {
@@ -149,7 +271,7 @@ model State {
   updatedAt DateTime @updatedAt()
   status    Boolean  @default(true)
 
-  Municipality Municipality[]
+  municipality Municipality[]
 }
 
 model Municipality {
@@ -159,17 +281,17 @@ model Municipality {
   stateId      String @db.ObjectId
   state        State  @relation(fields: [stateId], references: [id])
 
-  City City[]
+  colony Colony[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
   status    Boolean  @default(true)
 }
 
-model City {
+model Colony {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  city           String
+  colony         String
   municipalityId String       @db.ObjectId
   municipality   Municipality @relation(fields: [municipalityId], references: [id])
 
@@ -177,24 +299,86 @@ model City {
   updatedAt DateTime @updatedAt()
   status    Boolean  @default(true)
 
-  Branch Branch[]
+  branch Branch[]
+  road   Road[]
 }
 
-model Branch {
+model Road {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  name            String
-  address         String
-  locationUrl     String?
-  vehicleCapacity Int
-  trucksCapacity  Int
+  roadName        String
+  roadType        RoadType
+  roadEntity      RoadEntity
+  circulationType CirculationType
 
-  cityId String @db.ObjectId
-  city   City   @relation(fields: [cityId], references: [id])
+  colonyId String @db.ObjectId
+  colony   Colony @relation(fields: [colonyId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
   status    Boolean  @default(true)
 
-  vehicles Vehicle[]
+  branch Branch[]
+}
+
+model Branch {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  key         String
+  name        String
+  locationUrl String?
+
+  address String?
+  number  String?
+
+  kilometer   String?
+  origin      String?
+  destination String?
+
+  roadId String? @db.ObjectId
+  road   Road?   @relation(fields: [roadId], references: [id])
+
+  colonyId String @db.ObjectId
+  colony   Colony @relation(fields: [colonyId], references: [id])
+
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt()
+  status        Boolean         @default(true)
+  branchSection BranchSection[]
+}
+
+model BranchSection {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name     String
+  capacity Int
+
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt()
+  status             Boolean              @default(true)
+  
+  branchId           String               @db.ObjectId
+  branch             Branch               @relation(fields: [branchId], references: [id])
+
+  vehicle            Vehicle[]
+  branchRegistration BranchRegistration[]
+}
+
+model BranchRegistration {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  checkType CheckType
+
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+
+  branchSectionId String        @db.ObjectId
+  branchSection   BranchSection @relation(fields: [branchSectionId], references: [id])
+
+  vehicleId String  @db.ObjectId
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  status    Boolean  @default(true)
 }

@@ -7,12 +7,21 @@ type SafeBranch = NullableToOptional<
 >;
 
 const CreateBranchSchema = z.object({
+    key: z.string(),
     name: z.string(),
-    address: z.string(),
     locationUrl: z.string().optional().nullable(),
-    vehicleCapacity: z.number(),
-    trucksCapacity: z.number(),
-    cityId: zObjectId(),
+
+    // Street
+    address: z.string().optional().nullable(),
+    number: z.string().optional().nullable(),
+
+    // Road
+    kilometer: z.string().optional().nullable(),
+    origin: z.string().optional().nullable(),
+    destination: z.string().optional().nullable(),
+
+    roadId: zObjectId().optional().nullable(),
+    colonyId: zObjectId(),
 }) satisfies z.ZodType<SafeBranch>;
 
 const UpdateBranchSchema = CreateBranchSchema.partial();

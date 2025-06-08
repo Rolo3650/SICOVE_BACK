@@ -8,7 +8,7 @@ const mockedUser = (): Partial<User> => {
         phone: 5529792343,
         email: "alangrant@sicudi.com",
         password: "dinoGrant.128",
-        role: "student",
+        role: "admin",
         userStatus: "active",
     };
 };

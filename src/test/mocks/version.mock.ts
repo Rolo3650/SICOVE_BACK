@@ -6,7 +6,7 @@ const mockedVersion = (): Partial<Version> => {
         description: "The most powerfull hasback car created.",
         fuelType: "Gasoline",
         engineSize: 1.8,
-        transmissionType: "Automatic",
+        transmissionType: "CVT",
         vehicleType: "Sedan",
         year: new Date("2024-01-01"),
     };

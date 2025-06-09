@@ -15,7 +15,7 @@ export class BranchSectionService {
         this.configService = configService;
     }
 
-    async getBranchSectiones(props?: {
+    async getBranchSections(props?: {
         include?: Prisma.BranchSectionInclude;
     }): Promise<BranchSection[]> {
         const branchSectiones = await db.branchSection.findMany({

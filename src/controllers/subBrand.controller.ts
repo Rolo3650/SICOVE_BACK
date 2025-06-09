@@ -32,7 +32,7 @@ import {
     transformZodSchemaToParamSchema,
 } from "src/utils/zodToOpenApi";
 
-@Controller("/subBrand")
+@Controller("/sub-brand")
 @applyDecorators(ApiBearerAuth())
 export class SubBrandController {
     private readonly subBrandService: SubBrandService;

@@ -8,6 +8,7 @@ type SafeVerification = NullableToOptional<
 
 const CreateVerificationSchema = z.object({
     verificationDate: z.coerce.date(),
+    verificationType: z.string(),
     vehicleId: zObjectId(),
 }) satisfies z.ZodType<SafeVerification>;
 

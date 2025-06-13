@@ -174,12 +174,12 @@ model Vehicle {
   vehicleStatus VehicleStatus @default(new)
   size          Int           @default(1)
 
-  registered          Boolean             @default(false)
-  circulationCard     String?
-  circulationEndDate  DateTime?
-  licencePlate        String?
-  verificiationNumber Int?
-  verificiationColor  VerificiationColor?
+  registered         Boolean             @default(false)
+  circulationCard    String?
+  circulationEndDate DateTime?
+  licencePlate       String?
+  verificationNumber Int?
+  verificationColor  VerificiationColor?
 
   ownerName   String?
   ownerType   OwnerType?
@@ -239,6 +239,7 @@ model Verification {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   verificationDate DateTime @default(now())
+  verificationType String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
@@ -353,12 +354,12 @@ model BranchSection {
   name     String
   capacity Int
 
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt()
-  status             Boolean              @default(true)
-  
-  branchId           String               @db.ObjectId
-  branch             Branch               @relation(fields: [branchId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  status    Boolean  @default(true)
+
+  branchId String @db.ObjectId
+  branch   Branch @relation(fields: [branchId], references: [id])
 
   vehicle            Vehicle[]
   branchRegistration BranchRegistration[]

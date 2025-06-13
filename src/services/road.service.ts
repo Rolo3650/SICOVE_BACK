@@ -42,13 +42,13 @@ export class RoadService {
     }
 
     async createRoad(roadDto: CreateRoad): Promise<Road> {
-        const colony = await db.colony.findUnique({
+        const municipality = await db.municipality.findUnique({
             where: {
-                id: roadDto.colonyId,
+                id: roadDto.municipalityId,
                 status: true,
             },
         });
-        if (!colony) {
+        if (!municipality) {
             throw new NotFoundException("Municipality not found");
         }
 
@@ -59,14 +59,14 @@ export class RoadService {
     }
 
     async updateRoad(roadDto: UpdateRoad, id: string): Promise<Road> {
-        if (roadDto.colonyId) {
-            const colony = await db.colony.findUnique({
+        if (roadDto.municipalityId) {
+            const municipality = await db.municipality.findUnique({
                 where: {
-                    id: roadDto.colonyId,
+                    id: roadDto.municipalityId,
                     status: true,
                 },
             });
-            if (!colony) {
+            if (!municipality) {
                 throw new NotFoundException("Colony not found");
             }
         }

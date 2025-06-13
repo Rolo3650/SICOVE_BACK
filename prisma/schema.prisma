@@ -287,6 +287,8 @@ model Municipality {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()
   status    Boolean  @default(true)
+
+  Road Road[]
 }
 
 model Colony {
@@ -301,7 +303,6 @@ model Colony {
   status    Boolean  @default(true)
 
   branch Branch[]
-  road   Road[]
 }
 
 model Road {
@@ -312,8 +313,8 @@ model Road {
   roadEntity      RoadEntity
   circulationType CirculationType
 
-  colonyId String @db.ObjectId
-  colony   Colony @relation(fields: [colonyId], references: [id])
+  municipalityId String       @db.ObjectId
+  municipality   Municipality @relation(fields: [municipalityId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()

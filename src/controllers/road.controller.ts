@@ -45,11 +45,11 @@ export class RoadController {
 
     @Get()
     async getRoads(@Res() res: Response): Promise<Response> {
-        const colonies = await this.roadService.getRoads({
+        const roads = await this.roadService.getRoads({
             include: {
-                colony: {
+                municipality: {
                     include: {
-                        municipality: true,
+                        state: true,
                     },
                 },
             },
@@ -58,7 +58,7 @@ export class RoadController {
             message: "Cities found",
             statusCode: HttpStatus.OK,
             data: {
-                colonies,
+                roads,
             },
         };
         return res.status(response.statusCode).json(response);
@@ -97,13 +97,11 @@ export class RoadController {
     ): Promise<Response> {
         const road = await this.roadService.getRoad(params.id, {
             include: {
-                colony: {
+                municipality: {
                     include: {
-                        municipality: {
+                        state: {
                             include: {
-                                state: {
-                                    include: { country: true },
-                                },
+                                country: true,
                             },
                         },
                     },

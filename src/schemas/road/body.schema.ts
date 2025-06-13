@@ -12,7 +12,7 @@ const CreateRoadSchema = z.object({
     roadType: z.enum(getEnumPrismaValues(RoadType)),
     roadEntity: z.enum(getEnumPrismaValues(RoadEntity)),
     circulationType: z.enum(getEnumPrismaValues(CirculationType)),
-    colonyId: zObjectId(),
+    municipalityId: zObjectId(),
 }) satisfies z.ZodType<SafeRoad>;
 
 const UpdateRoadSchema = CreateRoadSchema.partial();

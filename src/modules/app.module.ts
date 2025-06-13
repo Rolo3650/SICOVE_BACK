@@ -2,6 +2,7 @@ import { MiddlewareConsumer, Module, RequestMethod } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule, JwtModuleOptions } from "@nestjs/jwt";
 import { AppController } from "src/controllers/app.controller";
+import { BranchController } from "src/controllers/branch.controller";
 import { BranchRegistrationController } from "src/controllers/branchRegistration.controller";
 import { BranchSectionController } from "src/controllers/branchSection.controller";
 import { BrandController } from "src/controllers/brand.controller";
@@ -22,6 +23,7 @@ import { validateEnv } from "src/core/configuration";
 import { LoggerMiddleware } from "src/middlewares/logger.middleware";
 import { UserMiddleware } from "src/middlewares/user.middleware";
 import { AppService } from "src/services/app.service";
+import { BranchService } from "src/services/branch.service";
 import { BranchRegistrationService } from "src/services/branchRegistration.service";
 import { BranchSectionService } from "src/services/branchSection.service";
 import { BrandService } from "src/services/brand.service";
@@ -74,7 +76,7 @@ import { VersionService } from "src/services/version.service";
         MunicipalityController,
         ColonyController,
         RoadController,
-        BrandController,
+        BranchController,
         BranchSectionController,
         BranchRegistrationController,
     ],
@@ -94,7 +96,7 @@ import { VersionService } from "src/services/version.service";
         MunicipalityService,
         ColonyService,
         RoadService,
-        BrandService,
+        BranchService,
         BranchSectionService,
         BranchRegistrationService,
     ],

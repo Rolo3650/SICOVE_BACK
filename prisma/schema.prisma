@@ -77,6 +77,11 @@ enum CheckType {
   Out
 }
 
+enum AdressType {
+  road
+  colony
+}
+
 model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -329,6 +334,7 @@ model Branch {
   key         String
   name        String
   locationUrl String?
+  adressType  AdressType @default(colony)
 
   address String?
   number  String?
@@ -340,8 +346,8 @@ model Branch {
   roadId String? @db.ObjectId
   road   Road?   @relation(fields: [roadId], references: [id])
 
-  colonyId String @db.ObjectId
-  colony   Colony @relation(fields: [colonyId], references: [id])
+  colonyId String? @db.ObjectId
+  colony   Colony? @relation(fields: [colonyId], references: [id])
 
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt()

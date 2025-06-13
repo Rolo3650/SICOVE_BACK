@@ -59,13 +59,13 @@ export class BranchService {
             }
         }
         if (branchDto.roadId) {
-            const colony = await db.colony.findUnique({
+            const road = await db.road.findUnique({
                 where: {
-                    id: branchDto.colonyId,
+                    id: branchDto.roadId,
                     status: true,
                 },
             });
-            if (!colony) {
+            if (!road) {
                 throw new NotFoundException("Colony not found");
             }
         }
@@ -89,13 +89,13 @@ export class BranchService {
             }
         }
         if (branchDto.roadId) {
-            const colony = await db.colony.findUnique({
+            const road = await db.road.findUnique({
                 where: {
-                    id: branchDto.colonyId,
+                    id: branchDto.roadId,
                     status: true,
                 },
             });
-            if (!colony) {
+            if (!road) {
                 throw new NotFoundException("Colony not found");
             }
         }

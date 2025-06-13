@@ -1,4 +1,5 @@
-import { Branch } from "@prisma/client";
+import { AdressType, Branch } from "@prisma/client";
+import { getEnumPrismaValues } from "src/utils/enum";
 import { z } from "zod";
 import { NullableToOptional, zObjectId } from "../general.schema";
 
@@ -10,6 +11,7 @@ const CreateBranchSchema = z.object({
     key: z.string(),
     name: z.string(),
     locationUrl: z.string().optional().nullable(),
+    adressType: z.enum(getEnumPrismaValues(AdressType)),
 
     // Street
     address: z.string().optional().nullable(),
@@ -21,7 +23,7 @@ const CreateBranchSchema = z.object({
     destination: z.string().optional().nullable(),
 
     roadId: zObjectId().optional().nullable(),
-    colonyId: zObjectId(),
+    colonyId: zObjectId().optional().nullable(),
 }) satisfies z.ZodType<SafeBranch>;
 
 const UpdateBranchSchema = CreateBranchSchema.partial();

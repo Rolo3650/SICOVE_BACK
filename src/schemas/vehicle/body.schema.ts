@@ -1,5 +1,6 @@
 import {
     OwnerType,
+    SizeType,
     Vehicle,
     VehicleStatus,
     VerificiationColor,
@@ -20,7 +21,7 @@ const CreateVehicleSchema = z.object({
     engineNumber: z.string(),
     chasisNumber: z.string(),
     vehicleStatus: z.enum(getEnumPrismaValues(VehicleStatus)),
-    size: z.number().int(),
+    size: z.enum(getEnumPrismaValues(SizeType)),
 
     // Verification information
     registered: z.boolean(),

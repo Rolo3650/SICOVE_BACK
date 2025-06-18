@@ -82,6 +82,13 @@ enum AdressType {
   colony
 }
 
+enum SizeType {
+  mini
+  medium
+  grand
+  mega
+}
+
 model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -177,7 +184,7 @@ model Vehicle {
   engineNumber  String
   chasisNumber  String
   vehicleStatus VehicleStatus @default(new)
-  size          Int           @default(1)
+  size          SizeType      @default(mini)
 
   registered         Boolean             @default(false)
   circulationCard    String?
@@ -358,8 +365,11 @@ model Branch {
 model BranchSection {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  name     String
-  capacity Int
+  name   String
+  mini   Int
+  medium Int
+  grand  Int
+  mega   Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt()

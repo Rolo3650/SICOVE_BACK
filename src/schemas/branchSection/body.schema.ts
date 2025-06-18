@@ -8,7 +8,10 @@ type SafeBranchSection = NullableToOptional<
 
 const CreateBranchSectionSchema = z.object({
     name: z.string(),
-    capacity: z.number().int(),
+    mini: z.number().int(),
+    medium: z.number().int(),
+    grand: z.number().int(),
+    mega: z.number().int(),
     branchId: zObjectId(),
 }) satisfies z.ZodType<SafeBranchSection>;
 

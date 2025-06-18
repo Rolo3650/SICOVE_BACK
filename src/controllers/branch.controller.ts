@@ -112,6 +112,17 @@ export class BranchController {
                         },
                     },
                 },
+                road: {
+                    include: {
+                        municipality: {
+                            include: {
+                                state: {
+                                    include: { country: true },
+                                },
+                            },
+                        },
+                    },
+                },
                 branchSection: {
                     include: {
                         vehicle: {

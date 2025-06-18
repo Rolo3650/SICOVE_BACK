@@ -51,21 +51,7 @@ export class BranchSectionController {
         const branchSections =
             await this.branchSectionService.getBranchSections({
                 include: {
-                    branch: {
-                        include: {
-                            colony: {
-                                include: {
-                                    municipality: {
-                                        include: {
-                                            state: {
-                                                include: { country: true },
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
+                    branch: true,
                 },
             });
         const response: SuccessResponse = {

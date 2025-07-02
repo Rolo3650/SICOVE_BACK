@@ -51,7 +51,11 @@ export class BranchRegistrationController {
         const branchRegistrations =
             await this.branchRegistrationService.getBranchRegistrations({
                 include: {
-                    branchSection: true,
+                    branchSection: {
+                        include: {
+                            branch: true,
+                        },
+                    },
                     vehicle: true,
                     user: true,
                 },

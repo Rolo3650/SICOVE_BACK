@@ -8,6 +8,7 @@ Este repositorio contiene el **backend** del Sistema de Control Vehicular. Esta 
 
 - Tener instalado **Node.js** en su **versión más reciente**
 - Tener acceso a la terminal (cmd, bash, PowerShell, etc.)
+- Acceder desde una red privada ya sea de teléfono o distribuidor asociado.
 
 ---
 
@@ -29,6 +30,7 @@ npm run prisma
 ```
 
 Esto generará el cliente de Prisma y preparará las estructuras necesarias para la conexión con la base de datos.
+Es importante considerar que en el env existe ya una instancia de una base de datos alojada en Atlas la cual el IPN tiene bloqueada, por lo que será necesario acceder desde su propia red para evitar inconvenientes.
 
 ---
 
